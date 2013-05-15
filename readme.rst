@@ -1,5 +1,5 @@
-Bugzilla Schema Documentation Generation Code
-=============================================
+Bugzilla Schema Doc Generation
+==============================
 
 1. Introduction
 ---------------
