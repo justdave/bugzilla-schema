@@ -2830,7 +2830,7 @@ prelude=["""
 <p>This document is generated automatically by a Python script which
 constructs and colors the schema tables from the stored results of
 MySQL queries.  For more information about the scripts, see <a
-href="http://github.com/Ravenbrook.bugzilla-schema">the GitHub repo</a>.</p>
+href="http://github.com/Ravenbrook/bugzilla-schema">the GitHub repo</a>.</p>
 
 <p>The purpose of this document is to act as a reference for
 developers of Bugzilla and of code which interacts with Bugzilla
