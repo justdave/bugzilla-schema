@@ -333,6 +333,16 @@ class index_webpage(schema_webpage):
         self.title = 'Bugzilla Schema Documentation'
         self.b('<div align="center"><table>')
 
+        self.b('<p>This service generates documentation for the database schema of '
+               '<a href="http://bugzilla.org/">Bugzilla</a> defect-tracking software. '
+               'It can produce documentation for the schema of any historical version, '
+               'or of the schema changes between any two versions.</p>'
+               '<p>It was written by staff at <a href="http://www.ravenbrook.com/">Ravenbrook '
+               'Limited</a>, as part of the <a href="http://www.ravenbrook.com/project/p4dti">'
+               'P4DTI</a> project under contract to <a href="http://www.perforce.com">Perforce, Inc.</a> '
+               'The source code and data for this service are open source and available '
+               'at <a href="http://github.com/Ravenbrook/bugzilla-schema">GitHub</a>.</p>')
+
         self.b('<tr><td>')
         self.b('<form action="/tool/bugzilla-schema/" method="get">')
         self.b('<input name="action" value="single" type="hidden" />')

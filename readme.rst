@@ -11,6 +11,11 @@ of the `Perforce Defect Tracking Integration <http://www.ravenbrook.com/project/
 
 Please note:
 
+- there are some teething problems in automatically replicating the
+  sources to GitHub from the Ravenbrook Perforce repository; the
+  'pickles' directory is incomplete at present.  We expect to fix this
+  soon.
+
 - this has not been substantially updated since 2009, and the last
   schema contained in the data is for Bugzilla 3.3.4.  We don't have
   an ongoing business case for maintaining it.
