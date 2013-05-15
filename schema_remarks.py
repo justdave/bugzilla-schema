@@ -2770,34 +2770,21 @@ colored as follows:</p>
 # standalone rather than through CGI.
 
 header = ["""<?xml version="1.0" encoding="UTF-8"?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-
 <head>
-
-<title>Bugzilla database schema</title>
-
+<title> Bugzilla Schema for Version 3.4.2 </title>
 </head>
-
 <body bgcolor="#FFFFFF" text="#000000" link="#000099" vlink="#660066" alink="#FF0000">
-
 <div align="center">
-
 <p>
-<a href="/">Ravenbrook</a> /
-<a href="/project/">Projects</a> /
-<a href="/project/p4dti/">Perforce Defect Tracking Integration</a> /
-<a href="/project/p4dti/version/2.2/">Version 2.2 Product Sources</a> /
-<a href="/project/p4dti/version/2.2/design/">Design</a>
+<a href="/">Ravenbrook</a>
+/ <a href="/tool/">Tools</a>
+/ <a href="/tool/bugzilla-schema/">Bugzilla Schema</a>
 </p>
-
-<p><i><a href="/project/p4dti/">Perforce Defect Tracking Integration Project</a></i></p>
-
 <hr />
-
-<h1>Bugzilla database schema</h1>
+<h1> Bugzilla Schema</h1>
+</div>
 
 <address>
 <a href="http://www.ravenbrook.com/">Ravenbrook Limited</a>,
@@ -2806,29 +2793,21 @@ dynamically generated on %(DATE)s</address>
 </div>
 """]
 
-footer = ["""
-<hr />
+footer = ["""<hr />
+<p><small>This document is copyright &copy; 2001-2013 Perforce Software, Inc.  All rights reserved.</small></p>
 
-<p> <small>This document is copyright &copy; 2001-2003 Perforce Software, Inc.  All rights reserved.</small> </p>
+<p><small>Redistribution and use of this document in any form, with or without modification, is permitted provided that redistributions of this document retain the above copyright notice, this condition and the following disclaimer.</small></p>
 
-<p> <small>Redistribution and use of this document in any form, with or without modification, is permitted provided that redistributions of this document retain the above copyright notice, this condition and the following disclaimer.</small> </p>
-
-<p> <small> <strong> This document is provided by the copyright holders and contributors "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. In no event shall the copyright holders and contributors be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this document, even if advised of the possibility of such damage. </strong> </small> </p>
+<p><small><strong>This document is provided by the copyright holders and contributors "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. In no event shall the copyright holders and contributors be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this document, even if advised of the possibility of such damage. </strong></small></p>
 
 <div align="center">
-
 <p>
-<a href="/">Ravenbrook</a> /
-<a href="/project/">Projects</a> /
-<a href="/project/p4dti/">Perforce Defect Tracking Integration</a> /
-<a href="/project/p4dti/version/2.2/">Version 2.2 Product Sources</a> /
-<a href="/project/p4dti/version/2.2/design/">Design</a>
+<a href="/">Ravenbrook</a>
+/ <a href="/tool/">Tools</a>
+/ <a href="/tool/bugzilla-schema/">Bugzilla Schema</a>
 </p>
-
 </div>
-
 </body>
-
 </html>
 """,
 ]
@@ -2851,21 +2830,19 @@ prelude=["""
 <p>This document is generated automatically by a Python script which
 constructs and colors the schema tables from the stored results of
 MySQL queries.  For more information about the scripts, see <a
-href="code.html"><code>code.html</code></a>.</p>
+href="http://github.com/Ravenbrook.bugzilla-schema">the GitHub repo</a>.</p>
 
 <p>The purpose of this document is to act as a reference for
 developers of Bugzilla and of code which interacts with Bugzilla
 (e.g. P4DTI).</p>
 
-<p>The intended readership is P4DTI developers and Bugzilla developers
-and administrators.</p>
+<p>The intended readers are Bugzilla developers and
+administrators.</p>
 
 <p>This document is not confidential.</p>
 
-<p>Please send any comments to <a
-href="mailto:p4dti-comments@ravenbrook.com">&lt;p4dti-comments@ravenbrook.com&gt;</a>,
-and problem reports to <a
-href="mailto:p4dti-support@ravenbrook.com">&lt;p4dti-support@ravenbrook.com&gt;</a>.</p>
+<p>Please send any comments or problem reports to <a
+href="mailto:bugzilla-staff@ravenbrook.com">&lt;bugzilla-staff@ravenbrook.com&gt;</a>.</p>
 
 <h2><a id="section-2" name="section-2">2. Bugzilla overview</a></h2>
 

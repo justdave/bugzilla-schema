@@ -71,8 +71,6 @@ class webpage:
         self.debug_level = 0
         self.directory_links = [
             ( '', 'Ravenbrook' ),
-            ( 'project', 'Projects' ),
-            ( 'p4dti', 'Perforce Defect Tracking Integration' ),
             ( 'tool', 'Tools' ),
             ]
 
@@ -149,7 +147,7 @@ class webpage:
 
     # Print the coyright message and the license conditions.
     def print_copyright(self):
-	print ('<p><small>This document is copyright &copy; 2001-2004 '
+	print ('<p><small>This document is copyright &copy; 2001-2013 '
                'Perforce Software, Inc.  All rights reserved.</small></p>\n')
 
         print ('<p><small>Redistribution and use of this document in any form, '
@@ -241,7 +239,7 @@ class schema_webpage(webpage):
         webpage.__init__(self)
         self.action = action
         self.form = form
-        self.directory_links.append(( 'cgi/bugzilla-schema', 'Bugzilla Schema' ))
+        self.directory_links.append(( 'bugzilla-schema', 'Bugzilla Schema' ))
 
     # Return the form parameter named by parameter, as a string.  Return
     # None if there is no such parameter or if the parameter is the
@@ -336,7 +334,7 @@ class index_webpage(schema_webpage):
         self.b('<div align="center"><table>')
 
         self.b('<tr><td>')
-        self.b('<form action="index.cgi" method="get">')
+        self.b('<form action="/tool/bugzilla-schema/" method="get">')
         self.b('<input name="action" value="single" type="hidden" />')
         self.b('<fieldset><legend>Schema for a single version</legend>')
         self.b('<select name="version">')
@@ -348,7 +346,7 @@ class index_webpage(schema_webpage):
         self.b('</td></tr>')
         ####
         self.b('<tr><td>')
-        self.b('<form action="index.cgi" method="get">')
+        self.b('<form action="/tool/bugzilla-schema/" method="get">')
         self.b('<fieldset><legend>Schema for a range of versions</legend>')
         self.b('<input name="action" value="range" type="hidden" />')
         self.b('<select name="from">')
