@@ -20,12 +20,9 @@ import copy
 import re
 import types
 import time
-import sys
 
 import schema_remarks
 import get_schema
-
-from pprint import pprint
 
 error = 'Schema processing error'
 
