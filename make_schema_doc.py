@@ -341,7 +341,6 @@ def output_schema(schema, remarks, colours, bugzilla_versions):
         if not isinstance(thisremarks, list): thisremarks = [thisremarks]
         remark = str.join(' ',
                   [process(r,bugzilla_versions,dict) for r in thisremarks])
-                  #list(map(lambda r,bv=bugzilla_versions,d=dict: process(r,bv,d),remarks[table])))
         tables_table_rows.append(('<th%s><a href="#table-%s">%s</a></th>\n\n' % (colour, table, table)) +
                                  ('    <td%s>%s</td>\n\n' % (colour, remark)))
         quick_tables_table_rows.append('<th%s><a href="#table-%s">%s</a></th>\n\n' % (colour, table, table))
