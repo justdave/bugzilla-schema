@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/python3
 # 
 #                              Ravenbrook
 #                     <http://www.ravenbrook.com/>

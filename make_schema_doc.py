@@ -20,9 +20,12 @@ import copy
 import re
 import types
 import time
+import sys
 
 import schema_remarks
 import get_schema
+
+from pprint import pprint
 
 error = 'Schema processing error'
 
@@ -54,9 +57,12 @@ def version_item_transform(x):
     else:
         return int(x)
 
+def cmp(a, b):
+    return (a > b) - (a < b) 
+
 def version_compare(v1,v2):
-    v1m = map(version_item_transform, version_re.match(v1).groups())
-    v2m = map(version_item_transform, version_re.match(v2).groups())
+    v1m = list(map(version_item_transform, version_re.match(v1).groups()))
+    v2m = list(map(version_item_transform, version_re.match(v2).groups()))
     return cmp(v1m, v2m)
 
 vd_cache = {}
@@ -81,9 +87,9 @@ vd_cache = {}
 # red     From <first> to <last>        first < last
 
 def versioning_dict(first, last, versions):
-    if not vd_cache.has_key(versions):
+    if versions not in vd_cache:
         vd_cache[versions] = {}
-    if vd_cache[versions].has_key((first,last)):
+    if (first,last) in vd_cache[versions]:
         return vd_cache[versions][(first,last)]
     dict = {}
     before_first = False # any versions before first?
@@ -138,11 +144,12 @@ def versioning_dict(first, last, versions):
 # process() takes a schema remark and a list of bugzilla versions and
 # returns the concatenated processed string
 
+
 def process(x, bugzilla_versions, dict):
-    if type(x) == types.StringType:
+    if type(x) == bytes or type(x) == str:
         return x % dict
-    elif type(x) == types.ListType:
-        return string.join(map(lambda i, bv = bugzilla_versions, d = dict: process(i, bv, d), x), '')
+    elif type(x) == list:
+        return str.join('', list(map(lambda i, bv = bugzilla_versions, d = dict: process(i, bv, d), x)))
     else:
         (first, last, text) = x
         vd = versioning_dict(first, last, bugzilla_versions)
@@ -184,13 +191,13 @@ def output_description(table, colour, remark, columns, colours, dict, bv):
     add('    <th>Properties</th>\n\n')
     add('    <th>Remarks</th>\n\n')
     add('  </tr>\n\n')
-    cs = columns.keys()
+    cs = list(columns.keys())
     cs.sort()
     for c in cs:
         d = columns[c]
         if d['Remarks']:
-            d['Remarks'] = string.join(map(lambda r,bv=bv,d=dict: process(r,bv,d),d['Remarks']),
-                                       ' ')
+            d['Remarks'] = str.join(' ',
+              list(map(lambda r,bv=bv,d=dict: process(r,bv,d),d['Remarks'])))
         else:
             d['Remarks'] = '-'
         output_row('column-%s-%s' % (table, c), c, d, ['Type',
@@ -205,7 +212,7 @@ def output_description(table, colour, remark, columns, colours, dict, bv):
 def output_indexes(table, colour, indexes, colours, dict, bv):
     add('<table%s border="1" cellspacing="0" cellpadding="5">\n\n' % colour)
     # order the indexes: PRIMARY first, then alphabetical.
-    inames = indexes.keys()
+    inames = list(indexes.keys())
     if 'PRIMARY' in inames:
         inames.remove('PRIMARY')
         inames.sort()
@@ -219,8 +226,8 @@ def output_indexes(table, colour, indexes, colours, dict, bv):
     for iname in inames:
         l = indexes[iname]
         if l['Remarks']:
-            l['Remarks'] = string.join(map(lambda r,bv=bv,d=dict: process(r,bv,d),l['Remarks']),
-                                       ' ')
+            l['Remarks'] = str.join(' ',
+              list(map(lambda r,bv=bv,d=dict: process(r,bv,d),l['Remarks'])))
         else:
             l['Remarks'] = '-'
         output_row("index-%s-%s" % (table, iname), iname, l, ['Fields',
@@ -238,44 +245,44 @@ def make_output_dict(schema, bugzilla_versions):
         dict['BUGZILLA_VERSIONS'] = "version " +  bugzilla_versions[0]
     else:
         dict['NOTATION_GUIDE'] = schema_remarks.notation_guide % dict
-        dict['BUGZILLA_VERSIONS'] = "versions " +  string.join(bugzilla_versions[:-1], ', ') + ' and ' + bugzilla_versions[-1]
-    tables = schema.keys()
+        dict['BUGZILLA_VERSIONS'] = "versions " +  str.join(', ', bugzilla_versions[:-1]) + ' and ' + bugzilla_versions[-1]
+    tables = list(schema.keys())
     for table in tables:
         dict['the-table-%s' % table] = 'the <a href="#table-%s">%s</a> table' % (table, table)
         dict['table-%s' % table] = '<a href="#table-%s">%s</a>' % (table,table)
         (versions, columns, indexes) = schema[table]
-        for c in columns.keys():
+        for c in list(columns.keys()):
             dict['column-%s-%s' % (table, c)] = '<a href="#column-%s-%s">%s.%s</a>' % (table, c, table, c)
-        for i in indexes.keys():
+        for i in list(indexes.keys()):
             dict['index-%s-%s' % (table, i)] = '<a href="#index-%s-%s">%s:%s</a>' % (table, i, table, i)
-    for t in schema_remarks.table_remark.keys():
+    for t in list(schema_remarks.table_remark.keys()):
         k = 'the-table-%s' % t
-        if not dict.has_key(k):
+        if k not in dict:
             dict[k] = 'the %s table' % t
             dict['table-%s' % t] = t
-        if schema_remarks.column_renamed.has_key(t):
-            for (alt,canon) in schema_remarks.column_renamed[t].items():
+        if t in schema_remarks.column_renamed:
+            for (alt,canon) in list(schema_remarks.column_renamed[t].items()):
                 kcanon = 'column-%s-%s' % (t, canon)
                 kalt = 'column-%s-%s' % (t, alt)
-                if dict.has_key(kcanon) and not dict.has_key(kalt): # the canonical name is in the schema
+                if kcanon in dict and kalt not in dict: # the canonical name is in the schema
                     dict[kalt] = '<a href="#column-%s-%s">%s.%s</a>' % (t, canon, t, alt)
                 else:
                     dict[kalt] = '%s.%s' % (t,alt)
-        if schema_remarks.index_renamed.has_key(t):
-            for (alt,canon) in schema_remarks.index_renamed[t].items():
+        if t in schema_remarks.index_renamed:
+            for (alt,canon) in list(schema_remarks.index_renamed[t].items()):
                 kcanon = 'index-%s-%s' % (t, canon)
                 kalt = 'index-%s-%s' % (t, alt)
-                if dict.has_key(kcanon) and not dict.has_key(kalt): # the canonical name is in the schema
+                if kcanon in dict and kalt not in dict: # the canonical name is in the schema
                     dict[kalt] = '<a href="#index-%s-%s">%s:%s</a>' % (t, canon, t, alt)
                 else:
                     dict[kalt] = '%s:%s' % (t,alt)
-        for c in schema_remarks.column_remark[t].keys():
+        for c in list(schema_remarks.column_remark[t].keys()):
             k = 'column-%s-%s' % (t,c)
-            if not dict.has_key(k):
+            if k not in dict:
                 dict[k] = '%s.%s' % (t,c)
-        for i in schema_remarks.index_remark[t].keys():
+        for i in list(schema_remarks.index_remark[t].keys()):
             k = 'index-%s-%s' % (t,i)
-            if not dict.has_key(k):
+            if k not in dict:
                 dict[k] = '%s:%s' % (t,i)
                 
     return dict
@@ -283,7 +290,7 @@ def make_output_dict(schema, bugzilla_versions):
 def tables_tables(tables_table_rows, quick_tables_table_rows, dict):
     n = len(tables_table_rows)
     TABLES_TABLE_COLS = 2
-    per_col = (n + TABLES_TABLE_COLS - 1)/TABLES_TABLE_COLS
+    per_col = int((n + TABLES_TABLE_COLS - 1)/TABLES_TABLE_COLS)
     tables_table = ('<table border="0" cellpadding="10">\n\n' +
                     '<tr valign="top" align="left">\n\n')
     for i in range(0, TABLES_TABLE_COLS):
@@ -309,7 +316,7 @@ def tables_tables(tables_table_rows, quick_tables_table_rows, dict):
             n = n + 1
 
     quick_tables_table = '<table border="0" cellspacing="0" cellpadding="1">\n\n'
-    rows = n / QUICK_TABLES_TABLE_COLS
+    rows = int(n / QUICK_TABLES_TABLE_COLS)
     for i in range(0, rows):
         quick_tables_table += '<tr valign="top" align="left">\n\n'
         for k in range(0,QUICK_TABLES_TABLE_COLS):
@@ -325,13 +332,16 @@ def output_schema(schema, remarks, colours, bugzilla_versions):
     dict= make_output_dict(schema, bugzilla_versions)
     tables_table_rows = []
     quick_tables_table_rows = []
-    tables = schema.keys()
+    tables = list(schema.keys())
     tables.sort()
     for table in tables:
         (versions, columns, indexes) = schema[table]
         colour = colours[table]['']
-        remark = string.join(map(lambda r,bv=bugzilla_versions,d=dict: process(r,bv,d),remarks[table]),
-                             ' ')
+        thisremarks = remarks[table]
+        if not isinstance(thisremarks, list): thisremarks = [thisremarks]
+        remark = str.join(' ',
+                  [process(r,bugzilla_versions,dict) for r in thisremarks])
+                  #list(map(lambda r,bv=bugzilla_versions,d=dict: process(r,bv,d),remarks[table])))
         tables_table_rows.append(('<th%s><a href="#table-%s">%s</a></th>\n\n' % (colour, table, table)) +
                                  ('    <td%s>%s</td>\n\n' % (colour, remark)))
         quick_tables_table_rows.append('<th%s><a href="#table-%s">%s</a></th>\n\n' % (colour, table, table))
@@ -365,17 +375,17 @@ white = ''                          # no colour
 #                   }}
 
 def init_colours(colours, t, cols, inds):
-    if not colours.has_key(t):
+    if t not in colours:
         colours[t] = {'': white}
         colours[t]['column'] = {}
         colours[t]['index'] = {}
     for c in cols:
-        if not colours[t]['column'].has_key(c):
+        if c not in colours[t]['column']:
             colours[t]['column'][c] = {}
             for k in ['', 'Name', 'Default', 'Type', 'Properties', 'Remarks']:
                 colours[t]['column'][c][k] = white
     for i in inds:
-        if not colours[t]['index'].has_key(i):
+        if i not in colours[t]['index']:
             colours[t]['index'][i] = {'': white}
             for k in ['', 'Name', 'Fields', 'Properties', 'Remarks']:
                 colours[t]['index'][i][k] = white
@@ -407,13 +417,13 @@ def pair_up_index_entries(bz, index):
     
 def pair_up_table_entries(bz, schema, table):
     (columns, indexes) = schema[table]
-    for c in columns.values():
+    for c in list(columns.values()):
         pair_up_column_entries(bz, c)
-    for i in indexes.values():
+    for i in list(indexes.values()):
         pair_up_index_entries(bz, i)
 
 def pair_up_schema(bz, schema):
-    for t in schema.keys():
+    for t in list(schema.keys()):
         pair_up_table_entries(bz, schema, t)
 
 # Given a pair list, make a single value which explains the history.
@@ -440,7 +450,7 @@ def stringify_pairs(pl):
         s = []
         for c in changes:
             s.append('<b>%s: </b>%s'% (c[0], c[1]))
-        return string.join(s, '; <br />\n')
+        return str.join('; <br />\n', s)
 
 # Special treatment for types, as we want enum types to show up
 # nicely.
@@ -460,10 +470,10 @@ def stringify_type(pl):
             if items == []:
                 # first enum
                 newpl.append(p)
-                items = map(string.strip, string.split(enum_re.match(p[1]).groups()[0], ","))
+                items = list(map(string.strip, string.split(enum_re.match(p[1]).groups()[0], ",")))
             else:
                 # enum following an enum
-                new_items = map(string.strip, string.split(enum_re.match(p[1]).groups()[0], ","))
+                new_items = list(map(string.strip, string.split(enum_re.match(p[1]).groups()[0], ",")))
                 add = []
                 delete = []
                 for i in items:
@@ -474,9 +484,9 @@ def stringify_type(pl):
                         add.append(i)
                 say = ''
                 if add:
-                    say += '<b>Added: </b> %s. ' % string.join(add, ', ')
+                    say += '<b>Added: </b> %s. ' % str.join(', ', add)
                 if delete:
-                    say += '<b>Removed: </b> %s. ' % string.join(delete, ', ')
+                    say += '<b>Removed: </b> %s. ' % str.join(', ', delete)
                 newpl.append((p[0], say))
                 items = new_items
     return stringify_pairs(newpl)
@@ -484,13 +494,13 @@ def stringify_type(pl):
 # Given a schema, fix up all the pair lists.    
 
 def stringify_schema(schema):
-    for table in schema.keys():
+    for table in list(schema.keys()):
         (versions, columns, indexes) = schema[table]
-        for c in columns.values():
+        for c in list(columns.values()):
             c['Type'] = stringify_type(c['Type'])
             for k in ['Name', 'Default', 'Properties']:
                 c[k] = stringify_pairs(c[k])
-        for i in indexes.values():
+        for i in list(indexes.values()):
             for k in ['Name', 'Fields', 'Properties']:
                 i[k] = stringify_pairs(i[k])
 
@@ -515,14 +525,14 @@ def make_versioned_schema(schema_list,
     bzs = []
     for (bz, schema) in schema_list:
         bzs.append(bz)
-        for t in schema.keys():
-            if not tables.has_key(t):
+        for t in list(schema.keys()):
+            if t not in tables:
                 tables[t] = ([],{},{})
-                if schema_remarks.table_remark.has_key(t):
+                if t in schema_remarks.table_remark:
                     remark = schema_remarks.table_remark[t]
                     if remark is None:
                         remark = []
-                    elif type(remark) == types.StringType:
+                    elif type(remark) == bytes:
                         remark = [remark]
                     else:
                         remark = remark[:]
@@ -531,24 +541,24 @@ def make_versioned_schema(schema_list,
                 table_remarks[t] = remark
             tables[t][0].append(bz)
             (cols,inds) = schema[t]
-            init_colours(colours, t, cols.keys(), inds.keys())
-            for c in cols.keys():
+            init_colours(colours, t, list(cols.keys()), list(inds.keys()))
+            for c in list(cols.keys()):
                 crec = tables[t][1].get(c,{'versions': []})
                 tables[t][1][c] = crec
                 crec['versions'].append(bz)
                 for k in ['Name', 'Default', 'Type', 'Properties']:
-                    if (crec.has_key(k) and
+                    if (k in crec and
                         crec[k][-1][1] != cols[c][k][0][1]):
                         colours[t]['column'][c][k] = blue
                     crec[k] = crec.get(k,[])
                     crec[k] += cols[c][k]
                     crec['Remarks'] = cols[c]['Remarks']
-            for i in inds.keys():
+            for i in list(inds.keys()):
                 irec = tables[t][2].get(i,{'versions': []})
                 tables[t][2][i] = irec
                 irec['versions'].append(bz)
                 for k in ['Name', 'Fields', 'Properties']:
-                    if (irec.has_key(k) and
+                    if (k in irec and
                         irec[k][-1][1] != inds[i][k][0][1]):
                         colours[t]['index'][i][k] = blue
                     irec[k] = irec.get(k, [])
@@ -560,7 +570,7 @@ def make_versioned_schema(schema_list,
     # Figure out all the colours and remarks accordingly.
     first_bz = schema_list[0][0]
     last_bz = schema_list[-1][0]
-    for t in tables.keys():
+    for t in list(tables.keys()):
         v = tables[t][0]
         if last_bz not in v:     # not in last version: red
             colours[t][''] = red
@@ -571,7 +581,7 @@ def make_versioned_schema(schema_list,
         for bz in bzs:
             if present and (bz not in v): # removed in this version
                 present = False
-                if schema_remarks.table_removed_remark.has_key(t):
+                if t in schema_remarks.table_removed_remark:
                     note = schema_remarks.table_removed_remark[t]
                     note = make_annotation('Removed in %s' % bz, note)
                     table_remarks[t].append(note)
@@ -579,15 +589,16 @@ def make_versioned_schema(schema_list,
                     errors.append('No remark to remove table %s' % t)
             elif (not present) and (bz in v): # added in this version
                 present = True
-                if schema_remarks.table_added_remark.has_key(t):
+                if t in schema_remarks.table_added_remark:
                     note = schema_remarks.table_added_remark[t]
                     note = make_annotation('Added in %s' % bz, note)
+                    if not isinstance(table_remarks[t], list): table_remarks[t] = [table_remarks[t]]
                     table_remarks[t].append(note)
                 else:
                     errors.append('No remark to add table %s' % t)
 
         # now the columns:
-        for c in tables[t][1].keys():
+        for c in list(tables[t][1].keys()):
             v = tables[t][1][c]['versions']
             if last_bz not in v:
                 colours[t]['column'][c][''] = red
@@ -599,8 +610,8 @@ def make_versioned_schema(schema_list,
                 if present and (bz not in v):
                     # removed in this version
                     present = False
-                    if (schema_remarks.column_removed_remark.has_key(t) and
-                        schema_remarks.column_removed_remark[t].has_key(c)):
+                    if (t in schema_remarks.column_removed_remark and
+                        c in schema_remarks.column_removed_remark[t]):
                         note = schema_remarks.column_removed_remark[t][c]
                     else:
                         errors.append("No remark to remove %s.%s." %(t, c))
@@ -610,8 +621,8 @@ def make_versioned_schema(schema_list,
                 elif (not present) and (bz in v):
                     # added in this version
                     present = True
-                    if (schema_remarks.column_added_remark.has_key(t) and
-                        schema_remarks.column_added_remark[t].has_key(c)):
+                    if (t in schema_remarks.column_added_remark and
+                        c in schema_remarks.column_added_remark[t]):
                         note = schema_remarks.column_added_remark[t][c]
                     else:
                         errors.append("No remark to add %s.%s." % (t,c))
@@ -620,7 +631,7 @@ def make_versioned_schema(schema_list,
                     tables[t][1][c]['Remarks'].append(note)
 
         # now the indexes:
-        for i in tables[t][2].keys():
+        for i in list(tables[t][2].keys()):
             v = tables[t][2][i]['versions']
             if last_bz not in v:
                 colours[t]['index'][i][''] = red
@@ -632,8 +643,8 @@ def make_versioned_schema(schema_list,
                 if present and (bz not in v):
                     # removed in this version
                     present = False
-                    if (schema_remarks.index_removed_remark.has_key(t) and
-                        schema_remarks.index_removed_remark[t].has_key(i)):
+                    if (t in schema_remarks.index_removed_remark and
+                        i in schema_remarks.index_removed_remark[t]):
                         note = schema_remarks.index_removed_remark[t][i]
                     else:
                         errors.append("No remark to remove %s:%s." %(t, i))
@@ -643,8 +654,8 @@ def make_versioned_schema(schema_list,
                 elif (not present) and (bz in v):
                     # added in this version
                     present = True
-                    if (schema_remarks.index_added_remark.has_key(t) and
-                        schema_remarks.index_added_remark[t].has_key(i)):
+                    if (t in schema_remarks.index_added_remark and
+                        i in schema_remarks.index_added_remark[t]):
                         note = schema_remarks.index_added_remark[t][i]
                     else:
                         errors.append("No remark to add %s:%s." % (t, i))
@@ -659,11 +670,11 @@ def get_versioned_tables(first, last):
     global errors
     errors = []
     if not first in schema_remarks.version_order:
-        raise error, "I don't know about version '%s'." % last
+        raise error("I don't know about version '%s'." % last)
     if not last in schema_remarks.version_order:
-        raise error, "I don't know about version '%s'." % last
+        raise error("I don't know about version '%s'." % last)
     if not (schema_remarks.version_order.index(last) >= schema_remarks.version_order.index(first)):
-        raise error, "Version '%s' comes before version '%s'." % (last, first)
+        raise error("Version '%s' comes before version '%s'." % (last, first))
     colours = {}
     tr = {}
     schema_name = schema_remarks.version_schema_map[first]
@@ -725,8 +736,8 @@ def make_tables(first, last):
     header = process(schema_remarks.header, bv, dict)
     footer = process(schema_remarks.footer, bv, dict)
     if errors:
-        e = string.join(errors, '<br/>\n')
-        raise error, e
+        e = str.join('<br/>\n', errors)
+        raise error(e)
     return (header, body, footer)
 
 def write_file(first, last, filename):

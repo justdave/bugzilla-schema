@@ -17,7 +17,7 @@
 #
 # This document is not confidential.
 
-import cPickle
+import pickle
 import types
 import schema_remarks
 import string
@@ -52,13 +52,13 @@ type_map={
 
 def reduce_columns(table, description, errors):
     columns = {}
-    if not schema_remarks.column_remark.has_key(table):
+    if table not in schema_remarks.column_remark:
         errors.append("No column remarks for table '%s'." % table)
         schema_remarks.column_remark[table] = {}
     for dict in description:
         name = dict['Field']
         sqltype = dict['Type']
-        if type_map.has_key(sqltype):
+        if sqltype in type_map:
             sqltype = type_map[sqltype]
         if sqltype[0:4] == 'enum':
             sqltype = sqltype.replace("','", "', '")
@@ -86,19 +86,19 @@ def reduce_columns(table, description, errors):
         if default is None:
             default = 'None'
 
-        if (schema_remarks.column_renamed.has_key(table) and
-            schema_remarks.column_renamed[table].has_key(name)):
+        if (table in schema_remarks.column_renamed and
+            name in schema_remarks.column_renamed[table]):
             canonical_name = schema_remarks.column_renamed[table][name]
         else:
             canonical_name = name
         remark = None
-        if not schema_remarks.column_remark[table].has_key(canonical_name):
+        if canonical_name not in schema_remarks.column_remark[table]:
             errors.append("Table '%s' has no remark for column '%s'." % (table, canonical_name))
         else:
             remark = schema_remarks.column_remark[table][canonical_name]
         if remark is None:
             remarks=[]
-        elif type(remark) == types.ListType:
+        elif type(remark) == list:
             remarks=remark
         else:
             remarks=[remark]
@@ -123,7 +123,7 @@ foreign_key_index_re=re.compile('^fk_.*')
 
 def reduce_indexes(table, index_list, errors):
     indexes = {}
-    if not schema_remarks.index_remark.has_key(table):
+    if table not in schema_remarks.index_remark:
         errors.append("No index remarks for table '%s'." % table)
         schema_remarks.index_remark[table] = {}
     for i in index_list:
@@ -131,12 +131,12 @@ def reduce_indexes(table, index_list, errors):
         if foreign_key_index_re.match(kn):
             # a foreign key constraint; not really an index
             continue
-        if (schema_remarks.index_renamed.has_key(table) and
-            schema_remarks.index_renamed[table].has_key(kn)):
+        if (table in schema_remarks.index_renamed and
+            kn in schema_remarks.index_renamed[table]):
             canon = schema_remarks.index_renamed[table][kn]
         else:
             canon = kn
-        if indexes.has_key(canon):
+        if canon in indexes:
             indexes[canon]['Fields'][i['Seq_in_index']] = i['Column_name']
         else:
             props = []
@@ -144,9 +144,9 @@ def reduce_indexes(table, index_list, errors):
                 props.append('unique')
             if i.get('Index_type', i.get('Comment')) == 'FULLTEXT':
                 props.append('full text')
-            props = string.join(props, ', ')
+            props = str.join(', ', props)
             remark = None
-            if not schema_remarks.index_remark[table].has_key(canon):
+            if canon not in schema_remarks.index_remark[table]:
                 errors.append("Table '%s' has no remark for index '%s'." % (table, canon))
             else:
                 remark = schema_remarks.index_remark[table][canon]
@@ -160,10 +160,10 @@ def reduce_indexes(table, index_list, errors):
                               'Remarks': remarks,
                               }
     # replace the 'Fields' map with an ordered list.
-    for k in indexes.keys():
-        f = indexes[k]['Fields'].items()
+    for k in list(indexes.keys()):
+        f = list(indexes[k]['Fields'].items())
         f.sort()
-        indexes[k]['Fields'] = string.join(map((lambda l: l[1]), f), ', ')
+        indexes[k]['Fields'] = str.join(', ', list(map((lambda l: l[1]), f)))
     return indexes
 
 # Given a schema version name, get the schema for that database as a
@@ -172,10 +172,10 @@ def reduce_indexes(table, index_list, errors):
 # reduce_indexes.
 
 def get_schema(schema_version, errors):
-    f = open('pickles/%s' % schema_version, 'r')
-    (sv, schema) = cPickle.load(f)
+    f = open('pickles/%s' % schema_version, 'rb')
+    (sv, schema) = pickle.load(f)
     f.close()
-    tables = schema.keys()
+    tables = list(schema.keys())
     for table in tables:
         (columns, indexes) = schema[table]
         schema[table] = (reduce_columns(table, columns, errors),

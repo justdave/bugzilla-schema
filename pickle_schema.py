@@ -16,7 +16,7 @@
 # This document is not confidential.
 
 import MySQLdb
-import cPickle
+import pickle
 
 def fetchall(cursor):
     rows = cursor.fetchall()
@@ -28,11 +28,11 @@ def fetchall(cursor):
 def select_rows(cursor, select):
     rows = cursor.execute(select)
     if cursor.description == None :
-        raise error, ("Trying to fetch rows from non-select '%s'"
+        raise error("Trying to fetch rows from non-select '%s'"
                       % select)
     values = fetchall(cursor)
     if values == None :
-        raise error, ("Select '%s' returned unfetchable rows."
+        raise error("Select '%s' returned unfetchable rows."
                       % select)
     return values
 
@@ -49,7 +49,7 @@ def fetch_rows_as_list_of_dictionaries(cursor, select):
     for value in values:
         result={}
         if len(keys) != len(value) :
-            raise error, ("Select '%s' returns %d keys but %d columns."
+            raise error("Select '%s' returns %d keys but %d columns."
                           % (select, len(keys), len(value)))
         for j in range(len(keys)):
             result[keys[j]] = value[j]
@@ -59,7 +59,7 @@ def fetch_rows_as_list_of_dictionaries(cursor, select):
 def pickle_schema(schema_version, db_name):
     db = MySQLdb.connect(db=db_name, user='bugs')
     cursor = db.cursor()
-    tables = map(lambda x:x[0],select_rows(cursor, 'show tables'))
+    tables = [x[0] for x in select_rows(cursor, 'show tables')]
     schema = {}
     for table in tables:
         columns = fetch_rows_as_list_of_dictionaries(cursor,
@@ -68,8 +68,8 @@ def pickle_schema(schema_version, db_name):
                                                      'show index from %s' % table)
         schema[table] = (columns, indexes)
     db.close()
-    f = open('pickles/%s' % schema_version, 'w')
-    cPickle.dump((schema_version, schema), f)
+    f = open('pickles/%s' % schema_version, 'wb')
+    pickle.dump((schema_version, schema), f)
     f.close()
     
 # A. REFERENCES

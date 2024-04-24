@@ -5,10 +5,11 @@ import cgi
 import os
 import re
 import string
-import StringIO
+import io
 import sys
 import time
-import urllib
+import html
+import urllib.request, urllib.parse, urllib.error
 
 # 1. GENERIC CGI SUPPORT FOR RAVENBROOK
 #
@@ -70,8 +71,6 @@ class webpage:
         self.debug_messages = []
         self.debug_level = 0
         self.directory_links = [
-            ( '', 'Ravenbrook' ),
-            ( 'tool', 'Tools' ),
             ]
 
     # Append a line of HTML to the body of the webpage.
@@ -97,9 +96,9 @@ class webpage:
     # in [RFC 822, 5.1] and modified by [RFC 1123, 5.2.14]; a date looks
     # like "Thu, 01 Dec 1994 16:00:00 GMT".
     def print_expires(self):
-        print 'Expires:',
-        print time.strftime("%a, %d %b %Y 00:00:00 GMT",
-                            time.gmtime(time.time() + 60*60*24))
+        print('Expires:', end=' ')
+        print(time.strftime("%a, %d %b %Y 00:00:00 GMT",
+                            time.gmtime(time.time() + 60*60*24)))
 
     # Prepare the body of the webpage by making calls to the b() method.
     # This is a placeholder that should be overridden in subclasses of
@@ -110,48 +109,48 @@ class webpage:
     # Print the directory links that go at the top and bottom of the
     # page.
     def print_directory_links(self):
-        print '<p>'
+        print('<p>')
         url = ''
-	separator = ''
+        separator = ''
         for dir, name in self.directory_links:
             url = url + dir + '/'
-            print '%s<a href="%s">%s</a>' % (separator, url, name)
-	    separator = '/ '
-        print '</p>'
+            print('%s<a href="%s">%s</a>' % (separator, url, name))
+        separator = '/ '
+        print('</p>')
 
     # Print the start of the webpage: the HTTP headers, the XML
     # declaration, the XHTML document type, the HTML <head/> element,
     # the directory links and the title.
     def print_header(self):
-        print 'Status:', self.status, self.status_message
-        print 'Content-Type: text/html'
-        print
-        print '<?xml version="1.0" encoding="UTF-8"?>'
+        print('Status:', self.status, self.status_message)
+        print('Content-Type: text/html')
+        print()
+        print('<?xml version="1.0" encoding="UTF-8"?>')
         print ('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 '
                'Transitional//EN" "DTD/xhtml1-transitional.dtd">')
         print ('<html xmlns="http://www.w3.org/1999/xhtml" '
                'xml:lang="en" lang="en">')
-        print '<head>'
-        print '<title>', cgi.escape(self.title), '</title>'
-        print '</head>'
+        print('<head>')
+        print('<title>', html.escape(self.title), '</title>')
+        print('</head>')
         print ('<body bgcolor="#FFFFFF" text="#000000" link="#000099" '
                'vlink="#660066" alink="#FF0000">')
         print ('<a href="https://github.com/Ravenbrook/bugzilla-schema">'
                '<img style="position: absolute; top: 0; right: 0; border: 0;"'
                'src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"'
                'alt="Fork me on GitHub"></a>')
-        print '<div align="center">'
+        print('<div align="center">')
         self.print_directory_links()
-        print '<hr />'
+        print('<hr />')
         if self.h1:
-            print '<h1>', self.h1, '</h1>'
+            print('<h1>', self.h1, '</h1>')
         else:
-            print '<h1>', cgi.escape(self.title), '</h1>'
-        print '</div>'
+            print('<h1>', html.escape(self.title), '</h1>')
+        print('</div>')
 
     # Print the coyright message and the license conditions.
     def print_copyright(self):
-	print ('<p><small>This document is copyright &copy; 2001-2013 '
+        print ('<p><small>This document is copyright &copy; 2001-2013 '
                'Perforce Software, Inc.  All rights reserved.</small></p>\n')
 
         print ('<p><small>Redistribution and use of this document in any form, '
@@ -182,15 +181,15 @@ class webpage:
     def print_debug(self):
         if self.debug_level > 0:
             if self.debug_messages:
-                print '<h3>Debugging Log:</h3>'
-                print '<small>'
+                print('<h3>Debugging Log:</h3>')
+                print('<small>')
                 for m in self.debug_messages:
-                    print self.format_text(m)
-                    print '<br />'
-                print '</small>'
+                    print(self.format_text(m))
+                    print('<br />')
+                print('</small>')
             else:
-                print '<h3>No Debugging Messages</h3>'
-            print '<hr />'
+                print('<h3>No Debugging Messages</h3>')
+            print('<hr />')
 
     # Print the bottom of the webpage: the time the page was generated
     # (the is important because the contents may depend on the time the
@@ -198,14 +197,14 @@ class webpage:
     # will need to know when the contents apply), the script that
     # generated the page, directory links, and closing tags.
     def print_footer(self):
-        print '<hr />'
+        print('<hr />')
         self.print_debug()
         self.print_copyright()
-        print '<div align="center">'
+        print('<div align="center">')
         self.print_directory_links()
-        print '</div>'
-        print '</body>'
-        print '</html>'
+        print('</div>')
+        print('</body>')
+        print('</html>')
 
     # Print the page by calling the check_form_parameters and
     # prepare_body methods, then printing the header, body and footer.
@@ -224,13 +223,14 @@ class webpage:
             else:
                 self.status = 500
                 error_message = '%s: %s' % (error_type, error_value)
+                raise
                 self.status_message = 'Python error'
             self.title = self.status_message
             self.h1 = self.title
             self.body = ['<p>%s</p>' % error_message]
         self.print_header()
         for b in self.body:
-            print b
+            print(b)
         self.print_footer()
 
 # 2. SCHEMA WEBPAGE CLASS
@@ -243,13 +243,13 @@ class schema_webpage(webpage):
         webpage.__init__(self)
         self.action = action
         self.form = form
-        self.directory_links.append(( 'bugzilla-schema', 'Bugzilla Schema' ))
+        self.directory_links.append(( '', 'Bugzilla Schema' ))
 
     # Return the form parameter named by parameter, as a string.  Return
     # None if there is no such parameter or if the parameter is the
     # empty string.
     def param(self, parameter):
-        if self.form.has_key(parameter):
+        if parameter in self.form:
             if self.form[parameter].file:
                 self.log(8, "Parameter %s: file type" % parameter)
                 return None
@@ -265,10 +265,10 @@ class schema_webpage(webpage):
     def check_bugzilla_version(self, param):
         version = self.param(param)
         if not version:
-            raise error, (400, 'Bad form parameters',
+            raise error(400, 'Bad form parameters',
                           'No %s parameter.' % param)
         if not (version in schema_remarks.version_order):
-            raise error, (404, 'No such Bugzilla version',
+            raise error(404, 'No such Bugzilla version',
                           'No such Bugzilla version: %s.'
                           % version)
         return version
@@ -296,7 +296,7 @@ class schema_webpage(webpage):
         try:
             debug_level = int(level)
         except ValueError:
-            raise error, (404, 'Bad debugging level',
+            raise error(404, 'Bad debugging level',
                           'Bad debugging level: %s.' % level)
         if debug_level < 0:
             level = 0
@@ -348,7 +348,7 @@ class index_webpage(schema_webpage):
                'at <a href="http://github.com/Ravenbrook/bugzilla-schema">GitHub</a>.</p>')
 
         self.b('<tr><td>')
-        self.b('<form action="/tool/bugzilla-schema/" method="get">')
+        self.b('<form action="" method="get">')
         self.b('<input name="action" value="single" type="hidden" />')
         self.b('<fieldset><legend>Schema for a single version</legend>')
         self.b('<select name="version">')
@@ -360,7 +360,7 @@ class index_webpage(schema_webpage):
         self.b('</td></tr>')
         ####
         self.b('<tr><td>')
-        self.b('<form action="/tool/bugzilla-schema/" method="get">')
+        self.b('<form action="" method="get">')
         self.b('<fieldset><legend>Schema for a range of versions</legend>')
         self.b('<input name="action" value="range" type="hidden" />')
         self.b('<select name="from">')
@@ -397,11 +397,11 @@ action_class_map = {
 
 def show_page():
     form = cgi.FieldStorage()
-    if form.has_key('action'):
+    if 'action' in form:
         action = form['action'].value
     else:
-	action = 'index'
-    if action_class_map.has_key(action):
+        action = 'index'
+    if action in action_class_map:
         action_class = action_class_map[action]
     else:
         action_class = index_webpage
