@@ -22,8 +22,9 @@ For any given release of Bugzilla, the process goes something like this:
   For this to work you will have to have MySQLdb (the Python MySQL interface
   library).  You can install it with ``pip install mysqlclient``.  It will use
   your database host and credentials from the ``[pickle_schema]`` section of
-  ``.my.cnf`` in your home directory. For example::
+  ``.my.cnf`` in your home directory. For example
 
+.. code-block:: inifile
   [pickle_schema]
   host=localhost
   user=bugs
@@ -40,9 +41,7 @@ For any given release of Bugzilla, the process goes something like this:
 
 - Then get a plain schema doc, either through the CGI or by hand::
 
-  >>> import make_schema_doc
-  >>> make_schema_doc.write_file('3.0.0','3.8.12','foo.html')
-  >>>
+  > ./make_schema_doc.py 3.0.0 3.8.12 foo.html
 
   This will generate a list of errors, complaining about schema
   changes (new or removed tables, columns or indexes) which aren't

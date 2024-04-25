@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 #             Perforce Defect Tracking Integration Project
 #              <http://www.ravenbrook.com/project/p4dti/>
 #
@@ -20,6 +21,7 @@ import copy
 import re
 import types
 import time
+import sys
 
 import schema_remarks
 import get_schema
@@ -757,6 +759,14 @@ def write_file(first, last, filename):
 def make_body(first, last):
     (header, body, footer) = make_tables(first, last)
     return body
+
+if __name__ == "__main__":
+    try:
+        (first, last, filename) = sys.argv[1:]
+    except ValueError:
+        print("Please pass the starting and ending schema versions and a filename to output to.")
+        sys.exit()
+    write_file(first, last, filename)
 
 # A. REFERENCES
 #
