@@ -176,6 +176,8 @@ def get_schema(schema_version, errors):
         f = open('pickles/%s' % schema_version, 'rb')
         (sv, schema) = pickle.load(f)
         f.close()
+    except FileNotFoundError:
+        errors.append("Unable to locate schema data file for version %s" % (schema_version))
     except Exception as e:
         errors.append("%s: %s" % (type(e).__name__, str(e)))
     tables = list(schema.keys())
