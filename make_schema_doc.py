@@ -24,7 +24,13 @@ import time
 import schema_remarks
 import get_schema
 
-error = 'Schema processing error'
+
+class BzSchemaProcessingException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+        self.message = message
+    def __str__(self):
+        return self.message
 
 errors = []
 
@@ -666,13 +672,17 @@ def get_versioned_tables(first, last):
     global errors
     errors = []
     if not first in schema_remarks.version_order:
-        raise error("I don't know about version '%s'." % last)
+        raise BzSchemaProcessingException("I don't know about version '%s'." % last)
     if not last in schema_remarks.version_order:
-        raise error("I don't know about version '%s'." % last)
+        raise BzSchemaProcessingException("I don't know about version '%s'." % last)
     if not (schema_remarks.version_order.index(last) >= schema_remarks.version_order.index(first)):
-        raise error("Version '%s' comes before version '%s'." % (last, first))
+        raise BzSchemaProcessingException("Version '%s' comes before version '%s'." % (last, first))
     colours = {}
     tr = {}
+    if not first in schema_remarks.version_schema_map:
+        raise BzSchemaProcessingException("I know version '%s' exists, but I seem to be missing the data for it." % last)
+    if not last in schema_remarks.version_schema_map:
+        raise BzSchemaProcessingException("I know version '%s' exists, but I seem to be missing the data for it." % last)
     schema_name = schema_remarks.version_schema_map[first]
     schema, errors = get_schema.get_schema(schema_name, errors)
     # turn fields into lists connecting Bugzilla version to value
@@ -733,7 +743,7 @@ def make_tables(first, last):
     footer = process(schema_remarks.footer, bv, dict)
     if errors:
         e = str.join('<br/>\n', errors)
-        raise error(e)
+        raise BzSchemaProcessingException(e)
     return (header, body, footer)
 
 def write_file(first, last, filename):

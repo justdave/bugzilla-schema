@@ -18,6 +18,13 @@
 import MySQLdb
 import pickle
 
+class BzSchemaPickleException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+        self.message = message
+    def __str__(self):
+        return self.message
+
 def fetchall(cursor):
     rows = cursor.fetchall()
     # for some reason, if no rows are returned sometimes one gets () here.
@@ -28,11 +35,11 @@ def fetchall(cursor):
 def select_rows(cursor, select):
     rows = cursor.execute(select)
     if cursor.description == None :
-        raise error("Trying to fetch rows from non-select '%s'"
+        raise BzSchemaPickleException("Trying to fetch rows from non-select '%s'"
                       % select)
     values = fetchall(cursor)
     if values == None :
-        raise error("Select '%s' returned unfetchable rows."
+        raise BzSchemaPickleException("Select '%s' returned unfetchable rows."
                       % select)
     return values
 
@@ -49,7 +56,7 @@ def fetch_rows_as_list_of_dictionaries(cursor, select):
     for value in values:
         result={}
         if len(keys) != len(value) :
-            raise error("Select '%s' returns %d keys but %d columns."
+            raise BzSchemaPickleException("Select '%s' returns %d keys but %d columns."
                           % (select, len(keys), len(value)))
         for j in range(len(keys)):
             result[keys[j]] = value[j]

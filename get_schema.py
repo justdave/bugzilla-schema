@@ -23,8 +23,6 @@ import schema_remarks
 import string
 import re
 
-error = 'getting a schema'
-
 # 3. Obtaining a schema, and reducing it to a normal form.
 
 # This is a map from type names (as returned by a 'describe'

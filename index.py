@@ -1,4 +1,5 @@
 import make_schema_doc
+from make_schema_doc import BzSchemaProcessingException
 import schema_remarks
 
 import cgi
@@ -52,7 +53,14 @@ import urllib.request, urllib.parse, urllib.error
 #
 # This could be separated out into a module of its own.
 
-error = 'error'
+class BzSchemaException(Exception):
+    def __init__(self, status, status_message, error_message):
+        super().__init__(error_message)
+        self.status = status
+        self.status_message = status_message
+        self.error_message = error_message
+    def __str__(self):
+        return self.error_message
 
 class webpage:
     body = ''                 # Page body
@@ -215,16 +223,26 @@ class webpage:
             self.check_debug_level()
             self.check_form_parameters()
             self.prepare_body()
+        except BzSchemaException as e:
+            self.status = e.status
+            self.status_message = e.status_message
+            error_message = e.error_message
+            self.title = self.status_message
+            self.h1 = self.title
+            self.body = ['<p>%s</p>' % error_message]
+        except BzSchemaProcessingException as e:
+            self.status = 500
+            self.status_message = "Schema processing error"
+            error_message = e.message
+            self.title = self.status_message
+            self.h1 = self.title
+            self.body = ['<p>%s</p>' % error_message]
         except:
             (error_type, error_value, _) = sys.exc_info()
-            if error_type == error:
-                (self.status, self.status_message,
-                 error_message) = error_value
-            else:
-                self.status = 500
-                error_message = '%s: %s' % (error_type, error_value)
-                raise
-                self.status_message = 'Python error'
+            self.status = 500
+            error_message = '%s: %s' % (error_type, error_value)
+            raise
+            self.status_message = 'Python error'
             self.title = self.status_message
             self.h1 = self.title
             self.body = ['<p>%s</p>' % error_message]
@@ -265,10 +283,10 @@ class schema_webpage(webpage):
     def check_bugzilla_version(self, param):
         version = self.param(param)
         if not version:
-            raise error(400, 'Bad form parameters',
+            raise BzSchemaException(400, 'Bad form parameters',
                           'No %s parameter.' % param)
         if not (version in schema_remarks.version_order):
-            raise error(404, 'No such Bugzilla version',
+            raise BzSchemaException(404, 'No such Bugzilla version',
                           'No such Bugzilla version: %s.'
                           % version)
         return version
@@ -296,7 +314,7 @@ class schema_webpage(webpage):
         try:
             debug_level = int(level)
         except ValueError:
-            raise error(404, 'Bad debugging level',
+            raise BzSchemaException(404, 'Bad debugging level',
                           'Bad debugging level: %s.' % level)
         if debug_level < 0:
             level = 0
