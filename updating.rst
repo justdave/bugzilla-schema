@@ -24,7 +24,7 @@ For any given release of Bugzilla, the process goes something like this:
   your database host and credentials from the ``[pickle_schema]`` section of
   ``.my.cnf`` in your home directory. For example
 
-.. code-block:: inifile
+  .. code-block:: inifile
 
    [pickle_schema]
    host=localhost
