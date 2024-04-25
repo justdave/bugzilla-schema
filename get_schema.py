@@ -170,9 +170,14 @@ def reduce_indexes(table, index_list, errors):
 # reduce_indexes.
 
 def get_schema(schema_version, errors):
-    f = open('pickles/%s' % schema_version, 'rb')
-    (sv, schema) = pickle.load(f)
-    f.close()
+    f = None
+    schema = {}
+    try:
+        f = open('pickles/%s' % schema_version, 'rb')
+        (sv, schema) = pickle.load(f)
+        f.close()
+    except Exception as e:
+        errors.append("%s: %s" % (type(e).__name__, str(e)))
     tables = list(schema.keys())
     for table in tables:
         (columns, indexes) = schema[table]

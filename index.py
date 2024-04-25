@@ -233,15 +233,15 @@ class webpage:
         except BzSchemaProcessingException as e:
             self.status = 500
             self.status_message = "Schema processing error"
-            error_message = e.message
+            error_message = str(e)
             self.title = self.status_message
             self.h1 = self.title
             self.body = ['<p>%s</p>' % error_message]
-        except:
-            (error_type, error_value, _) = sys.exc_info()
+        except Exception as e:
+            error_type = type(e).__name__
+            error_value = str(e)
             self.status = 500
             error_message = '%s: %s' % (error_type, error_value)
-            raise
             self.status_message = 'Python error'
             self.title = self.status_message
             self.h1 = self.title
