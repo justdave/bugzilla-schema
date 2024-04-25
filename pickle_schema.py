@@ -68,7 +68,8 @@ def fetch_rows_as_list_of_dictionaries(cursor, select):
 
 def pickle_schema(schema_version, db_name):
     default_file = os.path.expanduser('~/.my.cnf')
-    db = MySQLdb.connect(database=db_name, read_default_file=default_file)
+    db = MySQLdb.connect(database=db_name,
+            read_default_file=default_file, read_default_group='pickle_schema')
     cursor = db.cursor()
     tables = [x[0] for x in select_rows(cursor, 'show tables')]
     schema = {}

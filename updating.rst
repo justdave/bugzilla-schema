@@ -21,8 +21,13 @@ For any given release of Bugzilla, the process goes something like this:
 
   For this to work you will have to have MySQLdb (the Python MySQL interface
   library).  You can install it with ``pip install mysqlclient``.  It will use
-  your database host and credentials from the ``[client]`` section of
-  ``.my.cnf`` in your home directory.
+  your database host and credentials from the ``[pickle_schema]`` section of
+  ``.my.cnf`` in your home directory. For example::
+
+  [pickle_schema]
+  host=localhost
+  user=bugs
+  password=mypassword
 
   It will create a new pickle file in the pickles/ directory.  You should add
   that file to Git.  Note that you don't need access to MySQL on the web
