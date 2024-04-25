@@ -3,7 +3,12 @@ How to Update
 
 For any given release of Bugzilla, the process goes something like this:
 
-- Check the nodocs diffs to see whether there are any schema changes.
+- As of Bugzilla version 2.20, you can diff Bugzilla/DB/Schema.pm from one
+  version to the next to see if there were schema changes.::
+
+  > git diff release-2.20..release-2.22 -- Bugzilla/DB/Schema.pm
+
+  If that gives you no output, there were no changes.
 
 - If you are *sure* there are none, just add the release to a few
   places in schema_remarks.py (``version_order``, ``version_schema_map``,
