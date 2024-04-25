@@ -25,6 +25,7 @@ For any given release of Bugzilla, the process goes something like this:
   ``.my.cnf`` in your home directory. For example
 
 .. code-block:: inifile
+
   [pickle_schema]
   host=localhost
   user=bugs
