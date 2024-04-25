@@ -77,7 +77,7 @@ def reduce_columns(table, description, errors):
             default = '0'
         if (sqltype == 'datetime' and default == ''):
             default = '0000-00-00 00:00:00'
-        if (sqltype[:7] == 'decimal' and (default == '' or float(default) == 0.0)):
+        if (sqltype[:7] == 'decimal' and (default == '' or default == None or float(default) == 0.0)):
             default = "0.0"
         if default == '':
             default = "''"
