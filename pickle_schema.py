@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 #             Perforce Defect Tracking Integration Project
 #              <http://www.ravenbrook.com/project/p4dti/>
 #
@@ -17,6 +18,8 @@
 
 import MySQLdb
 import pickle
+import sys
+import os
 
 class BzSchemaPickleException(Exception):
     def __init__(self, message):
@@ -64,7 +67,8 @@ def fetch_rows_as_list_of_dictionaries(cursor, select):
     return results
 
 def pickle_schema(schema_version, db_name):
-    db = MySQLdb.connect(db=db_name, user='bugs')
+    default_file = os.path.expanduser('~/.my.cnf')
+    db = MySQLdb.connect(database=db_name, read_default_file=default_file)
     cursor = db.cursor()
     tables = [x[0] for x in select_rows(cursor, 'show tables')]
     schema = {}
@@ -79,6 +83,14 @@ def pickle_schema(schema_version, db_name):
     pickle.dump((schema_version, schema), f)
     f.close()
     
+if __name__ == "__main__":
+    try:
+        (schema_version, db_name) = sys.argv[1:]
+    except ValueError:
+        print("Please pass the schema version and the database name.")
+        sys.exit()
+    pickle_schema(schema_version, db_name)
+
 # A. REFERENCES
 #
 #

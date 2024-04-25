@@ -13,19 +13,20 @@ For any given release of Bugzilla, the process goes something like this:
   Search for 3.0.9 in schema_remarks.py to see the spots to update.
 
 - If there are schema changes, or if you aren't sure, download the
-  full Bugzilla release, do a vanilla install on your MySQL, start up
-  Python, and run ``pickle_schema.pickle_schema(version, db_name)``.  For
+  full Bugzilla release, do a vanilla install on your MySQL, then run
+  ``./pickle_schema.py version db_name``.  For
   instance::
 
-  >>> import pickle_schema
-  >>> pickle_schema.pickle_schema('3.8.12','bugs')
-  >>>
+  > ./pickle_schema.py 3.8.12 bugs
 
   For this to work you will have to have MySQLdb (the Python MySQL interface
-  library).  You can install it with ``pip install mysqlclient``.  It will
-  create a new pickle file in the pickles/ directory.  You should add that file
-  to Git.  Note that you don't need access to MySQL on the web server.  You
-  only need the pickle files.
+  library).  You can install it with ``pip install mysqlclient``.  It will use
+  your database host and credentials from the ``[client]`` section of
+  ``.my.cnf`` in your home directory.
+
+  It will create a new pickle file in the pickles/ directory.  You should add
+  that file to Git.  Note that you don't need access to MySQL on the web
+  server.  You only need the pickle files.
 
 - Then add the release to the main release tables in schema_remarks.py
   (``version_order``, ``version_schema_map``, ``version_remark``, and
