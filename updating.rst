@@ -26,10 +26,10 @@ For any given release of Bugzilla, the process goes something like this:
 
 .. code-block:: inifile
 
-  [pickle_schema]
-  host=localhost
-  user=bugs
-  password=mypassword
+   [pickle_schema]
+   host=localhost
+   user=bugs
+   password=mypassword
 
   It will create a new pickle file in the pickles/ directory.  You should add
   that file to Git.  Note that you don't need access to MySQL on the web
