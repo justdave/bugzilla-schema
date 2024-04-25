@@ -16,7 +16,6 @@
 #
 # This document is not confidential.
 
-import string
 import copy
 import re
 import types
@@ -474,10 +473,10 @@ def stringify_type(pl):
             if items == []:
                 # first enum
                 newpl.append(p)
-                items = list(map(string.strip, string.split(enum_re.match(p[1]).groups()[0], ",")))
+                items = list(map(str.strip, str.split(enum_re.match(p[1]).groups()[0], ",")))
             else:
                 # enum following an enum
-                new_items = list(map(string.strip, string.split(enum_re.match(p[1]).groups()[0], ",")))
+                new_items = list(map(str.strip, str.split(enum_re.match(p[1]).groups()[0], ",")))
                 add = []
                 delete = []
                 for i in items:
