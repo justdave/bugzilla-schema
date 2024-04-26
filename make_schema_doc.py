@@ -35,39 +35,12 @@ class BzSchemaProcessingException(Exception):
 
 errors = []
 
-# 4. Handling multiple Bugzilla versions.
-#
-# version_compare is a comparison function for Bugzilla version names.
-# e.g. 2.17.1 > 2.16.5 > 2.16 > 2.16rc1 > 2.14.5.
-#
-# It works by breaking the version name into a list of items (major,
-# minor, optional separator, optional release), transforming each item
-# into an integer, and comparing the list of items.
-#
-# 2.17.1  -> 2,17,2,1
-# 2.16.5  -> 2,16,2,5
-# 2.16    -> 2,16,1,1
-# 2.16rc1 -> 2,16,0,1
-
-version_re = re.compile('(\\d+)\\.(\\d+)(rc|\\.)?(\\d+)?')
-
-def version_item_transform(x):
-    if x is None:
-        return 1
-    elif x == 'rc':
-        return 0
-    elif x == '.':
-        return 2
-    else:
-        return int(x)
-
-def cmp(a, b):
-    return (a > b) - (a < b) 
-
 def version_compare(v1,v2):
-    v1m = list(map(version_item_transform, version_re.match(v1).groups()))
-    v2m = list(map(version_item_transform, version_re.match(v2).groups()))
-    return cmp(v1m, v2m)
+    # we already have the order defined in a table, let's use it
+    # this also lets us make 5.1 be > 5.2 (which is actually true)
+    v1idx = schema_remarks.version_order.index(v1)
+    v2idx = schema_remarks.version_order.index(v2)
+    return (v1idx > v2idx) - (v1idx < v2idx)
 
 vd_cache = {}
 
