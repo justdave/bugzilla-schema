@@ -411,7 +411,7 @@ version_schema_map = {
     '3.6.12': '3.5.3',
     '3.6.13': '3.5.3',
     '3.7.1': '3.7.1',
-    '3.7.2': 'not-yet-loaded',
+    '3.7.2': '3.7.2',
     '3.7.3': 'not-yet-loaded',
     '4.0rc1': 'not-yet-loaded',
     '4.0rc2': 'not-yet-loaded',
