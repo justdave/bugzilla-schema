@@ -64,7 +64,7 @@ version_order = [
     '2.16.10',
     '2.16.11',
     '2.17.1',
-    '2.17.3', # there was no 2.17.2
+    '2.17.3', # there was no 2.17.2, see https://www.bugzilla.org/blog/2003/01/02/status-update/
     '2.17.4',
     '2.17.5',
     '2.17.6',
@@ -260,12 +260,12 @@ version_order = [
     '5.2',
     '5.1.1', # yes, 5.1 comes after 5.2 in terms of schema progression
     '5.1.2', # 5.2 was actually forked from 5.0.6 instead of 5.1
-    '5.3.3',
+    '5.3.3', # and thus, 5.1 was renamed to 5.3, but after 5.1.2 was out
     '5.9.1',
     ]
 
-default_first_version = '3.0'
-default_last_version = '3.4.14'
+default_first_version = '3.4'
+default_last_version = '3.6.13'
 
 
 # Bugzilla schema versions.  A map from Bugzilla version to
@@ -392,111 +392,111 @@ version_schema_map = {
     '3.4.12': '3.3.4',
     '3.4.13': '3.3.4',
     '3.4.14': '3.3.4',
-    '3.5.1': '???',
-    '3.5.2': '???',
-    '3.5.3': '???',
-    '3.6rc1': '???',
-    '3.6': '???',
-    '3.6.1': '???',
-    '3.6.2': '???',
-    '3.6.3': '???',
-    '3.6.4': '???',
-    '3.6.5': '???',
-    '3.6.6': '???',
-    '3.6.7': '???',
-    '3.6.8': '???',
-    '3.6.9': '???',
-    '3.6.10': '???',
-    '3.6.11': '???',
-    '3.6.12': '???',
-    '3.6.13': '???',
-    '3.7.1': '???',
-    '3.7.2': '???',
-    '3.7.3': '???',
-    '4.0rc1': '???',
-    '4.0rc2': '???',
-    '4.0': '???',
-    '4.0.1': '???',
-    '4.0.2': '???',
-    '4.0.3': '???',
-    '4.0.4': '???',
-    '4.0.5': '???',
-    '4.0.6': '???',
-    '4.0.7': '???',
-    '4.0.8': '???',
-    '4.0.9': '???',
-    '4.0.10': '???',
-    '4.0.11': '???',
-    '4.0.12': '???',
-    '4.0.13': '???',
-    '4.0.14': '???',
-    '4.0.15': '???',
-    '4.0.16': '???',
-    '4.0.17': '???',
-    '4.0.18': '???',
-    '4.1.1': '???',
-    '4.1.2': '???',
-    '4.1.3': '???',
-    '4.2rc1': '???',
-    '4.2rc1': '???',
-    '4.2': '???',
-    '4.2.1': '???',
-    '4.2.2': '???',
-    '4.2.3': '???',
-    '4.2.4': '???',
-    '4.2.5': '???',
-    '4.2.6': '???',
-    '4.2.7': '???',
-    '4.2.8': '???',
-    '4.2.9': '???',
-    '4.2.10': '???',
-    '4.2.11': '???',
-    '4.2.12': '???',
-    '4.2.13': '???',
-    '4.2.14': '???',
-    '4.2.15': '???',
-    '4.2.16': '???',
-    '4.3.1': '???',
-    '4.3.2': '???',
-    '4.3.3': '???',
-    '4.4rc1': '???',
-    '4.4rc2': '???',
-    '4.4': '???',
-    '4.4.1': '???',
-    '4.4.2': '???',
-    '4.4.3': '???',
-    '4.4.4': '???',
-    '4.4.5': '???',
-    '4.4.6': '???',
-    '4.4.7': '???',
-    '4.4.8': '???',
-    '4.4.9': '???',
-    '4.4.10': '???',
-    '4.4.11': '???',
-    '4.4.12': '???',
-    '4.4.13': '???',
-    '4.4.14': '???',
-    '4.5.1': '???',
-    '4.5.2': '???',
-    '4.5.3': '???',
-    '4.5.4': '???',
-    '4.5.5': '???',
-    '4.5.6': '???',
-    '5.0rc1': '???',
-    '5.0rc2': '???',
-    '5.0rc3': '???',
-    '5.0': '???',
-    '5.0.1': '???',
-    '5.0.2': '???',
-    '5.0.3': '???',
-    '5.0.4': '???',
-    '5.0.4.1': '???',
-    '5.0.5': '???',
-    '5.0.6': '???',
-    '5.2': '???',
-    '5.1.1': '???',
-    '5.1.2': '???',
-    '5.3.3': '???',
+    '3.5.1': '3.5.1',
+    '3.5.2': '3.5.1',
+    '3.5.3': '3.5.3',
+    '3.6rc1': '3.5.3',
+    '3.6': '3.5.3',
+    '3.6.1': '3.5.3',
+    '3.6.2': '3.5.3',
+    '3.6.3': '3.5.3',
+    '3.6.4': '3.5.3',
+    '3.6.5': '3.5.3',
+    '3.6.6': '3.5.3',
+    '3.6.7': '3.5.3',
+    '3.6.8': '3.5.3',
+    '3.6.9': '3.5.3',
+    '3.6.10': '3.5.3',
+    '3.6.11': '3.5.3',
+    '3.6.12': '3.5.3',
+    '3.6.13': '3.5.3',
+    '3.7.1': 'not-yet-loaded',
+    '3.7.2': 'not-yet-loaded',
+    '3.7.3': 'not-yet-loaded',
+    '4.0rc1': 'not-yet-loaded',
+    '4.0rc2': 'not-yet-loaded',
+    '4.0': 'not-yet-loaded',
+    '4.0.1': 'not-yet-loaded',
+    '4.0.2': 'not-yet-loaded',
+    '4.0.3': 'not-yet-loaded',
+    '4.0.4': 'not-yet-loaded',
+    '4.0.5': 'not-yet-loaded',
+    '4.0.6': 'not-yet-loaded',
+    '4.0.7': 'not-yet-loaded',
+    '4.0.8': 'not-yet-loaded',
+    '4.0.9': 'not-yet-loaded',
+    '4.0.10': 'not-yet-loaded',
+    '4.0.11': 'not-yet-loaded',
+    '4.0.12': 'not-yet-loaded',
+    '4.0.13': 'not-yet-loaded',
+    '4.0.14': 'not-yet-loaded',
+    '4.0.15': 'not-yet-loaded',
+    '4.0.16': 'not-yet-loaded',
+    '4.0.17': 'not-yet-loaded',
+    '4.0.18': 'not-yet-loaded',
+    '4.1.1': 'not-yet-loaded',
+    '4.1.2': 'not-yet-loaded',
+    '4.1.3': 'not-yet-loaded',
+    '4.2rc1': 'not-yet-loaded',
+    '4.2rc1': 'not-yet-loaded',
+    '4.2': 'not-yet-loaded',
+    '4.2.1': 'not-yet-loaded',
+    '4.2.2': 'not-yet-loaded',
+    '4.2.3': 'not-yet-loaded',
+    '4.2.4': 'not-yet-loaded',
+    '4.2.5': 'not-yet-loaded',
+    '4.2.6': 'not-yet-loaded',
+    '4.2.7': 'not-yet-loaded',
+    '4.2.8': 'not-yet-loaded',
+    '4.2.9': 'not-yet-loaded',
+    '4.2.10': 'not-yet-loaded',
+    '4.2.11': 'not-yet-loaded',
+    '4.2.12': 'not-yet-loaded',
+    '4.2.13': 'not-yet-loaded',
+    '4.2.14': 'not-yet-loaded',
+    '4.2.15': 'not-yet-loaded',
+    '4.2.16': 'not-yet-loaded',
+    '4.3.1': 'not-yet-loaded',
+    '4.3.2': 'not-yet-loaded',
+    '4.3.3': 'not-yet-loaded',
+    '4.4rc1': 'not-yet-loaded',
+    '4.4rc2': 'not-yet-loaded',
+    '4.4': 'not-yet-loaded',
+    '4.4.1': 'not-yet-loaded',
+    '4.4.2': 'not-yet-loaded',
+    '4.4.3': 'not-yet-loaded',
+    '4.4.4': 'not-yet-loaded',
+    '4.4.5': 'not-yet-loaded',
+    '4.4.6': 'not-yet-loaded',
+    '4.4.7': 'not-yet-loaded',
+    '4.4.8': 'not-yet-loaded',
+    '4.4.9': 'not-yet-loaded',
+    '4.4.10': 'not-yet-loaded',
+    '4.4.11': 'not-yet-loaded',
+    '4.4.12': 'not-yet-loaded',
+    '4.4.13': 'not-yet-loaded',
+    '4.4.14': 'not-yet-loaded',
+    '4.5.1': 'not-yet-loaded',
+    '4.5.2': 'not-yet-loaded',
+    '4.5.3': 'not-yet-loaded',
+    '4.5.4': 'not-yet-loaded',
+    '4.5.5': 'not-yet-loaded',
+    '4.5.6': 'not-yet-loaded',
+    '5.0rc1': 'not-yet-loaded',
+    '5.0rc2': 'not-yet-loaded',
+    '5.0rc3': 'not-yet-loaded',
+    '5.0': 'not-yet-loaded',
+    '5.0.1': 'not-yet-loaded',
+    '5.0.2': 'not-yet-loaded',
+    '5.0.3': 'not-yet-loaded',
+    '5.0.4': 'not-yet-loaded',
+    '5.0.4.1': 'not-yet-loaded',
+    '5.0.5': 'not-yet-loaded',
+    '5.0.6': 'not-yet-loaded',
+    '5.2': 'not-yet-loaded',
+    '5.1.1': 'not-yet-loaded',
+    '5.1.2': 'not-yet-loaded',
+    '5.3.3': 'not-yet-loaded',
     '5.9.1': '5.9.1',
 }
 
@@ -724,8 +724,8 @@ version_remark = [
     ('5.0.6', '2019-02-09', 'An invasive patch release'),
     ('4.4.14', '2024-05-??', 'A security patch release'),
     ('5.0.4.1', '2024-05-??', 'A security patch release'),
-    ('5.2', '2024-05-??', ''),
-    ('5.3.3', '2024-05-??', 'A development release'),
+    ('5.2', '2024-05-??', 'Forked from 5.0.6 not from 5.1.'),
+    ('5.3.3', '2024-05-??', 'A development release following 5.1.2 (the branch was renamed)'),
     ('5.9.1', '2024-05-??', 'A development release'),
 ]
 
@@ -799,6 +799,8 @@ table_remark = {
     'keywords': 'Bugs may have keywords.  This table defines which bugs have which keywords.  The keywords are defined in %(the-table-keyworddefs)s.',
 
     'logincookies': 'Bugzilla generates a cookie each time a user logs in, and uses it for subsequent authentication.  The cookies generated are stored in this table.  For more information, see <a href="#notes-authentication">the notes on authentication</a>.',
+
+    'login_failure': 'Log of failed user login attempts. Records for a given user are cleared when they successfully log in. Users are locked out if they exceed MAX_LOGIN_ATTEMPTS in LOGIN_LOCKOUT_INTERVAL minutes (defined in Bugzilla::Constants).',
 
     'longdescs': 'Long bug <a href="#notes-descriptions">descriptions</a>.',
 
@@ -924,6 +926,8 @@ table_added_remark = {
     'keywords': None,
 
     'keyworddefs': None,
+
+    'login_failure': 'Supporting new feature to lock out users who repeatedly fail logging in',
 
     'longdescs': None,
 
@@ -1551,6 +1555,16 @@ column_remark = {
 
     },
 
+    'login_failure': {
+
+        'user_id': 'the user who failed a login (foreign key %(column-profiles-userid)s)',
+
+        'login_time': 'when the failure occurred',
+
+        'ip_addr': 'the IP address of the client that failed the login',
+
+    },
+
     'milestones': {
 
     'id': 'A unique numeric ID',
@@ -1626,87 +1640,92 @@ column_remark = {
 
     'products': {
 
-    'product': 'The name of the product.',
+        'product': 'The name of the product.',
 
-    'id': 'The product ID.',
+        'id': 'The product ID.',
 
-    'name': 'The product name.',
+        'name': 'The product name.',
 
-    'description': 'The description of the product',
+        'description': 'The description of the product',
 
-    'milestoneurl': 'The URL of a document describing the product milestones.',
+        'milestoneurl': 'The URL of a document describing the product milestones.',
 
-    'disallownew': 'New bugs can only be created for this product if this is 0.',
+        'disallownew': 'New bugs can only be created for this product if this is 0.',
 
-    'votesperuser': 'Total votes which a single user has for bugs of this product.',
+        'votesperuser': 'Total votes which a single user has for bugs of this product.',
 
-    'maxvotesperbug': 'Maximum number of votes which a bug may have.',
+        'maxvotesperbug': 'Maximum number of votes which a bug may have.',
 
-    'votestoconfirm': 'How many votes are required for this bug to become NEW.',
+        'votestoconfirm': 'How many votes are required for this bug to become NEW.',
 
-    'defaultmilestone': 'The default milestone for a new bug (foreign key %(column-milestones-value)s)',
+        'defaultmilestone': 'The default milestone for a new bug (foreign key %(column-milestones-value)s)',
 
-    'classification_id': 'The classification ID (foreign key %(column-classifications-id)s).',
+        'classification_id': 'The classification ID (foreign key %(column-classifications-id)s).',
+
+        'isactive': '1 if this value is available in the user interface, 0 otherwise',
+
+        'allows_unconfirmed': '1 if new bugs can be UNCONFIRMED, 0 if they always start as NEW',
+
     },
 
     'profile_setting': {
 
-    'setting_name': 'The name of the setting (foreign key %(column-setting-name)s).',
+        'setting_name': 'The name of the setting (foreign key %(column-setting-name)s).',
 
-    'user_id': 'The user (foreign key %(column-profiles-userid)s).',
+        'user_id': 'The user (foreign key %(column-profiles-userid)s).',
 
-    'setting_value': 'The value (foreign key %(column-setting_value-value)s).',
+        'setting_value': 'The value (foreign key %(column-setting_value-value)s).',
     },
 
     'profiles': {
 
-    'userid': 'A unique identifier for the user.  Used in other tables to identify this user.',
+        'userid': 'A unique identifier for the user.  Used in other tables to identify this user.',
 
-    'login_name': 'The user\'s email address.  Used when logging in or providing mailto: links.',
+        'login_name': 'The user\'s email address.  Used when logging in or providing mailto: links.',
 
-    'password': 'The user\'s password, in plaintext.',
+        'password': 'The user\'s password, in plaintext.',
 
-    'cryptpassword': ['The user\'s password.',
-                      (None, '2.12', '%(VERSION_STRING)sThe MySQL function <code>encrypt</code> is used to encrypt passwords.'),
-                      ('2.14', None, '%(VERSION_STRING)sThe Perl function <code>crypt</code> is used.')],
+        'cryptpassword': ['The user\'s password.',
+                          (None, '2.12', '%(VERSION_STRING)sThe MySQL function <code>encrypt</code> is used to encrypt passwords.'),
+                          ('2.14', None, '%(VERSION_STRING)sThe Perl function <code>crypt</code> is used.')],
 
-    'realname': 'The user\'s real name.',
+        'realname': 'The user\'s real name.',
 
-    'groupset': 'The set of groups to which the user belongs.  Each group corresponds to one bit and confers powers upon the user. See %(the-table-groups)s.',
+        'groupset': 'The set of groups to which the user belongs.  Each group corresponds to one bit and confers powers upon the user. See %(the-table-groups)s.',
 
-    'emailnotification': 'Controls when email reporting bug changes is sent to this user.',
+        'emailnotification': 'Controls when email reporting bug changes is sent to this user.',
 
-    'disabledtext': 'If non-empty, indicates that this account has been disabled and gives a reason. ',
+        'disabledtext': 'If non-empty, indicates that this account has been disabled and gives a reason. ',
 
-    'newemailtech': 'is non-zero if the user wants to user the "new" email notification technique.',
+        'newemailtech': 'is non-zero if the user wants to user the "new" email notification technique.',
 
-    'mybugslink': 'indicates whether a "My Bugs" link should appear at the bottom of each page.',
+        'mybugslink': 'indicates whether a "My Bugs" link should appear at the bottom of each page.',
 
-    'blessgroupset': 'Indicates the groups into which this user is able to introduce other users.',
+        'blessgroupset': 'Indicates the groups into which this user is able to introduce other users.',
 
-    'emailflags': 'Flags controlling when email messages are sent to this user.',
+        'emailflags': 'Flags controlling when email messages are sent to this user.',
 
-    'refreshed_when': 'A timestamp showing when the derived group memberships in %(the-table-user_group_map)s were last updated for this user.',
+        'refreshed_when': 'A timestamp showing when the derived group memberships in %(the-table-user_group_map)s were last updated for this user.',
 
-    'extern_id': 'The ID for environmental authentication (see <a href="#notes-authentication">the notes on authentication</a>).',
+        'extern_id': 'The ID for environmental authentication (see <a href="#notes-authentication">the notes on authentication</a>).',
 
-    'disable_mail': '1 to disable all mail to this user; 0 for mail to depend on the per-user email settings in %(table-email_setting)s.',
+        'disable_mail': '1 to disable all mail to this user; 0 for mail to depend on the per-user email settings in %(table-email_setting)s.',
 
     },
 
     'profiles_activity': {
 
-    'userid': 'The profile which has changed (foreign key %(column-profiles-userid)s)',
+        'userid': 'The profile which has changed (foreign key %(column-profiles-userid)s)',
 
-    'who': 'The user who changed it (foreign key %(column-profiles-userid)s)',
+        'who': 'The user who changed it (foreign key %(column-profiles-userid)s)',
 
-    'profiles_when': 'When it was changed',
+        'profiles_when': 'When it was changed',
 
-    'fieldid': 'The ID of the changed field (foreign key %(column-fielddefs-id)s)',
+        'fieldid': 'The ID of the changed field (foreign key %(column-fielddefs-id)s)',
 
-    'oldvalue': 'The old value',
+        'oldvalue': 'The old value',
 
-    'newvalue': 'The new value.',
+        'newvalue': 'The new value.',
     },
 
     'quips': {
@@ -1961,14 +1980,15 @@ column_remark = {
 
     'whine_events': {
 
-    'id': 'The whine event ID, used to identify this event.',
+        'id': 'The whine event ID, used to identify this event.',
 
-    'owner_userid': """The user ID of the whine owner (foreign key %(column-profiles-userid)s).  Must match %(column-namedqueries-userid)s for the queries associated with this event (%(column-whine_queries-query_name)s).""",
+        'owner_userid': """The user ID of the whine owner (foreign key %(column-profiles-userid)s).  Must match %(column-namedqueries-userid)s for the queries associated with this event (%(column-whine_queries-query_name)s).""",
 
-    'subject': 'The Subject of the whine emails.',
+        'subject': 'The Subject of the whine emails.',
 
-    'body': 'Text to appear in the body of the whine emails before the bugs table.',
+        'body': 'Text to appear in the body of the whine emails before the bugs table.',
 
+        'mailifnobugs': "1 is mail should be sent even if there are no results to the query. 0 if the report shouldn't be sent unless there are results.",
     },
 
     'whine_queries': {
@@ -2275,21 +2295,25 @@ column_added_remark = {
 
     'products': {
 
-    'classification_id': None,
+        'classification_id': None,
 
-    'votestoconfirm': None,
+        'votestoconfirm': None,
 
-    'defaultmilestone': None,
+        'defaultmilestone': None,
 
-    'disallownew': None,
+        'disallownew': None,
 
-    'maxvotesperbug': None,
+        'maxvotesperbug': None,
 
-    'votesperuser': None,
+        'votesperuser': None,
 
-    'id': 'replacing "product" as the table key',
+        'id': 'replacing "product" as the table key',
 
-    'name': 'replacing "product" as the product name',
+        'name': 'replacing "product" as the product name',
+
+        'isactive': 'replacing and inverting "disallownew" for better readability',
+
+        'allows_unconfirmed': 'Removing the relationship between votestoconfirm and whether or not the UNCONFIRMED status is available (Bug 162060)',
 
     },
 
@@ -2357,6 +2381,10 @@ column_added_remark = {
     'product_id': 'replacing "program"',
 
     'id': None,
+    },
+
+    'whine_events': {
+        'mailifnobugs': None,
     },
 
     'whine_schedules': {
@@ -2464,6 +2492,10 @@ column_removed_remark = {
 
     'product': 'replaced with "id" and "name"',
 
+    'disallownew': 'replaced by "isactive"',
+
+    'milestoneurl': 'very rarely used and UI was confusing (Bug 369489)',
+
     },
 
     'profiles': {
@@ -2481,6 +2513,12 @@ column_removed_remark = {
     'blessgroupset': 'replaced by %(the-table-user_group_map)s',
 
     'refreshed_when': 'redundant',
+
+    },
+
+    'series': {
+
+        'last_viewed': 'was never used, so removed. (bug 519032)',
 
     },
 
@@ -2575,6 +2613,7 @@ index_remark = {
         'field': None,
         'fieldid': None,
         'bugs_activity_who_idx': None,
+        'bugs_activity_added_idx': None,
         },
     'bugs_fulltext': {
         'PRIMARY': None,
@@ -2661,6 +2700,9 @@ index_remark = {
     'logincookies': {
         'PRIMARY': None,
         'lastused': None,
+        },
+    'login_failure': {
+        'login_failure_user_id_idx': None,
         },
     'longdescs': {
         'PRIMARY': None,
@@ -3025,6 +3067,7 @@ index_added_remark = {
     'bugs_activity': {
         'bug_when': 'replacing "when"',
         'bugs_activity_who_idx': None,
+        'bugs_activity_added_idx': None,
         'fieldid': 'replacing "field"',
         'field': None,
         },
@@ -5941,6 +5984,26 @@ select group_id from user_group_map where userid = <em>n</em> and isbless=0
     <td><a href="mailto:nb@ravenbrook.com">NB</a></td>
 
     <td>Add recent releases 2.20.7, 2.22.5, 2.22.6, 2.22.7, 3.0.5, 3.0.6, 3.0.7, 3.0.8, 3.2rc1, 3.2rc2, 3.2, 3.2.1, 3.2.2, 3.2.3, 3.2.4, 3.3.1, 3.3.2, 3.3.3, 3.3.4, 3.4rc1, and 3.4.</td>
+
+  </tr>
+
+  <tr valign="top">
+
+    <td>2024-04-26</td>
+
+    <td><a href="https://github.com/justdave">justdave</a></td>
+
+    <td>Add ancient releases 3.0.10, 3.0.11, 3.2.6, 3.2.7, 3.2.8, 3.2.9, 3.2.10, 3.4.3, 3.4.4, 3.4.5, 3.4.6, 3.4.7, 3.4.8, 3.4.9, 3.4.10, 3.4.11, 3.4.12, 3.4.13, 3.4.14, 3.5.1, and 3.5.2.</td>
+
+  </tr>
+
+  <tr valign="top">
+
+    <td>2024-04-27</td>
+
+    <td><a href="https://github.com/justdave">justdave</a></td>
+
+    <td>Add ancient releases 3.5.3, 3.6rc1, 3.6, 3.6.1, 3.6.2, 3.6.3, 3.6.4, 3.6.5, 3.6.6, 3.6.7, 3.6.8, 3.6.9, 3.6.10, 3.6.11, 3.6.12, and 3.6.13.</td>
 
   </tr>
 
