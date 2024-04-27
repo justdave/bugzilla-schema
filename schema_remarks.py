@@ -264,8 +264,8 @@ version_order = [
     '5.9.1',
     ]
 
-default_first_version = '3.4'
-default_last_version = '3.6.13'
+default_first_version = '3.6'
+default_last_version = '3.7.1'
 
 
 # Bugzilla schema versions.  A map from Bugzilla version to
@@ -410,7 +410,7 @@ version_schema_map = {
     '3.6.11': '3.5.3',
     '3.6.12': '3.5.3',
     '3.6.13': '3.5.3',
-    '3.7.1': 'not-yet-loaded',
+    '3.7.1': '3.7.1',
     '3.7.2': 'not-yet-loaded',
     '3.7.3': 'not-yet-loaded',
     '4.0rc1': 'not-yet-loaded',
@@ -818,6 +818,8 @@ table_remark = {
 
     'products': 'One row for each product.  See <a href="#notes-products">the notes on products.</a>',
 
+    'profile_search': 'The most-recent SAVE_NUM_SEARCHES (defined in Bugzilla::Constants) searches a user has run are stored here, so that the Next/Prev links in a bug that was opened from a list will continue to work even if you have multiple browser tabs open with different searches.',
+
     'profile_setting': 'User preference settings.',
 
     'profiles': 'Describes Bugzilla <a href="#notes-users">users</a>.  One row per user.',
@@ -945,6 +947,8 @@ table_added_remark = {
 
     'products': None,
 
+    'profile_search': None,
+
     'profile_setting': None,
 
     'profiles_activity': None,
@@ -1005,6 +1009,8 @@ table_removed_remark = {
     'shadowlog': 'similar functionality now available using MySQL\'s replication facilities',
 
     'user_series_map': 'partially replaced by %(the-table-category_group_map)s',
+
+    'votes': 'The Voting feature was moved to an extension. The table is not deleted on upgrade if it exists.',
 
 }
 
@@ -1231,6 +1237,8 @@ column_remark = {
 
         'removed': 'The old value of this field, or values which have been removed for multi-value fields such as %(column-bugs-keywords)s, %(the-table-cc)s, and %(the-table-dependencies)s',
 
+        'comment_id': 'The comment on the bug that was made at the same time as or most-recently previous to this change. (foreign key %(column-longdescs-comment_id)s)',
+
         },
 
     'bugs_fulltext': {
@@ -1374,6 +1382,11 @@ column_remark = {
         'visibility_field_id': 'If not NULL, the ID of a (single-select or multi-select) <i>control field</i> which controls the visibility of this field.  Only applies to custom fields.  Foreign key %(column-fielddefs-id)s.',
 
         'visibility_value_id': 'If not NULL, and the control field (with ID visibility_field_id) does not have a value with this ID, this field is not visible.  Only applies to custom fields.  Foreign key &lt;field&gt;.id, for example %(column-products-id)s or <a href="#column-customfield-id">cf_&lt;field&gt;.id</a>.',
+
+        'reverse_desc': 'Label for a list of bugs that link to a bug with this field. For example, if the description is "Is a duplicate of", the reverse description would be "Duplicates of this bug". Leave blank to disable the list for this bug.',
+
+        'is_mandatory': '1 if the field is required on the new bug form, 0 if it is not.',
+
         },
 
     'flagexclusions': {
@@ -1665,6 +1678,18 @@ column_remark = {
         'isactive': '1 if this value is available in the user interface, 0 otherwise',
 
         'allows_unconfirmed': '1 if new bugs can be UNCONFIRMED, 0 if they always start as NEW',
+
+    },
+
+    'profile_search': {
+
+        'id': 'A unique ID for the list, specified as list_id in the URL parameters.',
+
+        'user_id': 'The ID of the user who ran the search. (foreign key %(column-profiles-userid)s)',
+
+        'bug_list': 'The list of bug numbers returned by the search.',
+
+        'list_order': 'The sort order specified by the user.',
 
     },
 
@@ -2161,6 +2186,8 @@ column_added_remark = {
 
         'removed': 'replacing "oldvalue"',
 
+        'comment_id': None,
+
         },
 
     'classifications': {
@@ -2185,21 +2212,25 @@ column_added_remark = {
 
     'fielddefs': {
 
-    'obsolete': None,
+        'obsolete': None,
 
-    'custom': None,
+        'custom': None,
 
-    'type': None,
+        'type': None,
 
-    'enter_bug': None,
+        'enter_bug': None,
 
-    'buglist': None,
+        'buglist': None,
 
-    'value_field_id': None,
+        'value_field_id': None,
 
-'visibility_field_id': None,
+        'visibility_field_id': None,
 
-    'visibility_value_id': None,
+        'visibility_value_id': None,
+
+        'reverse_desc': None,
+
+        'is_mandatory': None,
 
     },
 
@@ -2422,6 +2453,10 @@ column_removed_remark = {
 
         'qacontact_accessible': None,
 
+        'votes': 'The Voting feature was moved to an extension. The column is not deleted on upgrade if it exists.',
+
+        'keywords': 'This was only used for caching. Improved indexing made this field unnecessary.',
+
         },
 
     'bugs_activity': {
@@ -2490,12 +2525,17 @@ column_removed_remark = {
 
     'products': {
 
-    'product': 'replaced with "id" and "name"',
+        'product': 'replaced with "id" and "name"',
 
-    'disallownew': 'replaced by "isactive"',
+        'disallownew': 'replaced by "isactive"',
 
-    'milestoneurl': 'very rarely used and UI was confusing (Bug 369489)',
+        'milestoneurl': 'very rarely used and UI was confusing (Bug 369489)',
 
+        'votesperuser': 'The Voting feature was moved to an extension. The column is not deleted on upgrade if it exists.',
+
+        'maxvotesperbug': 'The Voting feature was moved to an extension. The column is not deleted on upgrade if it exists.',
+
+        'votestoconfirm': 'The Voting feature was moved to an extension. The column is not deleted on upgrade if it exists.',
     },
 
     'profiles': {
@@ -2660,6 +2700,7 @@ index_remark = {
         'name': None,
         'sortkey': None,
         'fielddefs_value_field_id_idx': None,
+        'fielddefs_is_mandatory_idx': None,
         },
     'flagexclusions': {
         'type_id': None,
@@ -2745,6 +2786,10 @@ index_remark = {
         'PRIMARY': None,
         'name': None,
         },
+    'profile_search': {
+        'PRIMARY': None,
+        'profile_search_user_id': None,
+    },
     'profile_setting': {
     'profile_setting_value_unique_idx': None,
     },
@@ -3009,6 +3054,7 @@ index_removed_remark = {
         'short_desc': 'replaced by use of LIKE',
         'product': 'replaced by "product_id"',
         'component': 'replaced by "component_id"',
+        'votes': 'The Voting feature was moved to an extension.',
         },
 
     'bugs_activity': {
@@ -3085,6 +3131,7 @@ index_added_remark = {
 
     'fielddefs': {
         'fielddefs_value_field_id_idx': None,
+        'fielddefs_is_mandatory_idx': None,
     },
     
     'flags': {
@@ -3348,7 +3395,7 @@ the status field in the default workflow.</p>
   </tr>
 
 """,
-('2.10', None,
+('2.10', '3.6.13',
 """<tr%(VERSION_COLOUR)s valign="top" align="left">
 
     <td>UNCONFIRMED</td>
@@ -3358,6 +3405,21 @@ the status field in the default workflow.</p>
     <td>%(VERSION_STRING)sA new bug, when a product has voting</td>
 
     <td>to NEW by voting or confirmation<br />
+        to ASSIGNED by acceptance<br />
+        to RESOLVED by resolution<br />
+    </td>
+
+  </tr>"""),
+('3.7.1', None,
+"""<tr%(VERSION_COLOUR)s valign="top" align="left">
+
+    <td>UNCONFIRMED</td>
+
+    <td>No</td>
+
+    <td>%(VERSION_STRING)sA new bug, when a product allows UNCONFIRMED</td>
+
+    <td>to NEW by confirmation<br />
         to ASSIGNED by acceptance<br />
         to RESOLVED by resolution<br />
     </td>
@@ -3622,13 +3684,13 @@ cookies.</p>
 <p>Rows in %(the-table-logincookies)s are deleted after 30 days (at
 user login time).</p>""",
 
-('2.8', None, """<h3><a id="notes-voting" name="notes-voting">Voting</a></h3>
+('2.8', '3.6.13', """<h3><a id="notes-voting" name="notes-voting">Voting</a></h3>
 
 <p>%(VERSION_STRING)sUsers may vote for bugs which they think are
 important.  A user can vote for a bug more than once.  Votes are
 recorded in %(the-table-votes)s.</p>"""),
 
-('2.10', None, """%(VERSION_STRING)sThe maximum number of votes per
+('2.10', '3.6.13', """%(VERSION_STRING)sThe maximum number of votes per
 bug per user is product-dependent.  Whether or not project managers
 pay any attention to votes is up to them, apart from the "confirmation
 by acclamation" process, which is as follows:</p>
