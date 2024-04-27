@@ -584,8 +584,10 @@ def make_versioned_schema(schema_list,
             v = tables[t][1][c]['versions']
             if last_bz not in v:
                 colours[t]['column'][c][''] = red
+                colours[t][''] = blue
             elif first_bz not in v:
                 colours[t]['column'][c][''] = green
+                colours[t][''] = blue
             # don't colour whole column rows blue, so we're done
             present = tables[t][0][0] in v
             for bz in tables[t][0]:
@@ -617,8 +619,10 @@ def make_versioned_schema(schema_list,
             v = tables[t][2][i]['versions']
             if last_bz not in v:
                 colours[t]['index'][i][''] = red
+                colours[t][''] = blue
             elif first_bz not in v:
                 colours[t]['index'][i][''] = green
+                colours[t][''] = blue
             # don't colour whole index rows blue, so we're done
             present = tables[t][0][0] in v
             for bz in tables[t][0]:
