@@ -265,7 +265,7 @@ version_order = [
     ]
 
 default_first_version = '3.6'
-default_last_version = '3.7.1'
+default_last_version = '4.0.18'
 
 
 # Bugzilla schema versions.  A map from Bugzilla version to
@@ -412,29 +412,29 @@ version_schema_map = {
     '3.6.13': '3.5.3',
     '3.7.1': '3.7.1',
     '3.7.2': '3.7.2',
-    '3.7.3': 'not-yet-loaded',
-    '4.0rc1': 'not-yet-loaded',
-    '4.0rc2': 'not-yet-loaded',
-    '4.0': 'not-yet-loaded',
-    '4.0.1': 'not-yet-loaded',
-    '4.0.2': 'not-yet-loaded',
-    '4.0.3': 'not-yet-loaded',
-    '4.0.4': 'not-yet-loaded',
-    '4.0.5': 'not-yet-loaded',
-    '4.0.6': 'not-yet-loaded',
-    '4.0.7': 'not-yet-loaded',
-    '4.0.8': 'not-yet-loaded',
-    '4.0.9': 'not-yet-loaded',
-    '4.0.10': 'not-yet-loaded',
-    '4.0.11': 'not-yet-loaded',
-    '4.0.12': 'not-yet-loaded',
-    '4.0.13': 'not-yet-loaded',
-    '4.0.14': 'not-yet-loaded',
-    '4.0.15': 'not-yet-loaded',
-    '4.0.16': 'not-yet-loaded',
-    '4.0.17': 'not-yet-loaded',
-    '4.0.18': 'not-yet-loaded',
-    '4.1.1': 'not-yet-loaded',
+    '3.7.3': '3.7.2',
+    '4.0rc1': '4.0rc1',
+    '4.0rc2': '4.0rc1',
+    '4.0': '4.0rc1',
+    '4.0.1': '4.0rc1',
+    '4.0.2': '4.0rc1',
+    '4.0.3': '4.0rc1',
+    '4.0.4': '4.0rc1',
+    '4.0.5': '4.0rc1',
+    '4.0.6': '4.0rc1',
+    '4.0.7': '4.0rc1',
+    '4.0.8': '4.0rc1',
+    '4.0.9': '4.0rc1',
+    '4.0.10': '4.0rc1',
+    '4.0.11': '4.0rc1',
+    '4.0.12': '4.0rc1',
+    '4.0.13': '4.0rc1',
+    '4.0.14': '4.0rc1',
+    '4.0.15': '4.0rc1',
+    '4.0.16': '4.0rc1',
+    '4.0.17': '4.0rc1',
+    '4.0.18': '4.0rc1',
+    '4.1.1': '4.1.1',
     '4.1.2': 'not-yet-loaded',
     '4.1.3': 'not-yet-loaded',
     '4.2rc1': 'not-yet-loaded',
@@ -6065,7 +6065,7 @@ select group_id from user_group_map where userid = <em>n</em> and isbless=0
 
     <td><a href="https://github.com/justdave">justdave</a></td>
 
-    <td>Add ancient releases 3.5.3, 3.6rc1, 3.6, 3.6.1, 3.6.2, 3.6.3, 3.6.4, 3.6.5, 3.6.6, 3.6.7, 3.6.8, 3.6.9, 3.6.10, 3.6.11, 3.6.12, and 3.6.13.</td>
+    <td>Add ancient releases 3.5.3, 3.6rc1, 3.6, 3.6.1, 3.6.2, 3.6.3, 3.6.4, 3.6.5, 3.6.6, 3.6.7, 3.6.8, 3.6.9, 3.6.10, 3.6.11, 3.6.12, 3.6.13, 3.7.1, 3.7.2, 3.7.3, 4.0rc1, 4.0rc2, 4.0, 4.0.1, 4.0.2, 4.0.3, 4.0.4, 4.0.5, 4.0.6, 4.0.7, 4.0.8, 4.0.9, 4.0.10, 4.0.11, 4.0.12, 4.0.13, 4.0.14, 4.0.15, 4.0.16, 4.0.17, and 4.0.18.</td>
 
   </tr>
 
