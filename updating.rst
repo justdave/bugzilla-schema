@@ -3,7 +3,12 @@ How to Update
 
 For any given release of Bugzilla, the process goes something like this:
 
-- Check the nodocs diffs to see whether there are any schema changes.
+- As of Bugzilla version 2.20, you can diff Bugzilla/DB/Schema.pm from one
+  version to the next to see if there were schema changes.::
+
+  > git diff release-2.20..release-2.22 -- Bugzilla/DB/Schema.pm
+
+  If that gives you no output, there were no changes.
 
 - If you are *sure* there are none, just add the release to a few
   places in schema_remarks.py (``version_order``, ``version_schema_map``,
@@ -13,18 +18,27 @@ For any given release of Bugzilla, the process goes something like this:
   Search for 3.0.9 in schema_remarks.py to see the spots to update.
 
 - If there are schema changes, or if you aren't sure, download the
-  full Bugzilla release, do a vanilla install on your MySQL, start up
-  Python, and run ``pickle_schema.pickle_schema(version, db_name)``.  For
+  full Bugzilla release, do a vanilla install on your MySQL, then run
+  ``./pickle_schema.py version db_name``.  For
   instance::
-  >>> import pickle_schema
-  >>> pickle_schema.pickle_schema('3.8.12','bugs')
-  >>>
 
-  For this to work you will have to have MySQLdb (the Python MySQL
-  interface library).  It will create a new pickle file in the
-  pickles/ directory.  You should add that file to Git.  Note that you
-  don't need access to MySQL on the web server.  You only need the
-  pickle files.
+  > ./pickle_schema.py 3.8.12 bugs
+
+  For this to work you will have to have MySQLdb (the Python MySQL interface
+  library).  You can install it with ``pip install mysqlclient``.  It will use
+  your database host and credentials from the ``[pickle_schema]`` section of
+  ``.my.cnf`` in your home directory. For example
+
+  .. code-block:: ini
+
+   [pickle_schema]
+   host=localhost
+   user=bugs
+   password=mypassword
+
+  It will create a new pickle file in the pickles/ directory.  You should add
+  that file to Git.  Note that you don't need access to MySQL on the web
+  server.  You only need the pickle files.
 
 - Then add the release to the main release tables in schema_remarks.py
   (``version_order``, ``version_schema_map``, ``version_remark``, and
@@ -32,9 +46,8 @@ For any given release of Bugzilla, the process goes something like this:
   section of ``afterword``.
 
 - Then get a plain schema doc, either through the CGI or by hand::
-  >>> import make_schema_doc
-  >>> make_schema_doc.write_file('3.0.0','3.8.12','foo.html')
-  >>>
+
+  > ./make_schema_doc.py 3.0.0 3.8.12 foo.html
 
   This will generate a list of errors, complaining about schema
   changes (new or removed tables, columns or indexes) which aren't
